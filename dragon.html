@@ -1,0 +1,2009 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ular Tangga: Dragon Realm Ultimate Edition</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #09040d;
+      color: #f3e5f5;
+      padding: 10px;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      color: #ffd700;
+      margin-bottom: 8px;
+      font-size: 22px;
+      text-shadow: 0 0 10px #ff4500, 0 0 20px #ff8c00;
+      letter-spacing: 1px;
+    }
+    
+    .setup-screen {
+      background: linear-gradient(135deg, #1f0b29 0%, #0d0414 100%);
+      padding: 20px;
+      border-radius: 16px;
+      border: 2px solid #ffd700;
+      text-align: center;
+      box-shadow: 0 0 25px rgba(255, 69, 0, 0.5), inset 0 0 15px rgba(142, 36, 170, 0.4);
+      margin-top: 15px;
+      max-width: 360px;
+      width: 100%;
+      position: relative;
+    }
+
+    .setup-screen h2 {
+      color: #ffd700;
+      font-size: 16px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .dragon-badge {
+      font-size: 45px;
+      margin-bottom: 5px;
+      display: inline-block;
+      filter: drop-shadow(0 0 15px #ff4500);
+      animation: floatDragon 2.5s infinite alternate ease-in-out;
+    }
+
+    @keyframes floatDragon {
+      0% { transform: translateY(0px) rotate(-3deg); }
+      100% { transform: translateY(-6px) rotate(3deg); }
+    }
+
+    .custom-select, .custom-input {
+      width: 100%;
+      padding: 8px;
+      font-size: 13px;
+      font-weight: bold;
+      background: #12051c;
+      color: #ffd700;
+      border: 1px solid #8e24aa;
+      border-radius: 6px;
+      outline: none;
+    }
+
+    .player-select-box {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      border-radius: 8px;
+      padding: 8px;
+      margin-bottom: 8px;
+      text-align: left;
+    }
+
+    .player-select-title {
+      font-size: 11px;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .select-grid { display: flex; gap: 6px; }
+
+    .character-picker { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 7px; }
+    .character-option {
+      border: 1px solid rgba(255,215,0,.28); background: #12051c; border-radius: 8px;
+      padding: 7px 2px; font-size: 22px; cursor: pointer; text-align: center; transition: .18s ease;
+    }
+    .character-option:hover { transform: translateY(-2px) scale(1.05); border-color: #ffd700; }
+    .character-option.selected { border: 2px solid #ffd700; background: #3a1548; box-shadow: 0 0 12px rgba(255,215,0,.55); }
+    .player-name-input { margin-top: 7px; }
+    .btn-action {
+      background: linear-gradient(45deg, #ff4500, #ff8c00);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 8px;
+      border: none;
+      box-shadow: 0 4px 12px rgba(255, 69, 0, 0.4);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    .btn-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(255, 140, 0, 0.6);
+    }
+
+    .btn-action:disabled {
+      background: #444 !important;
+      box-shadow: none;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .game-container {
+      display: none;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    
+    .board-wrapper {
+      position: relative;
+      width: 380px;
+      height: 380px;
+      border: 3px solid #ffd700;
+      border-radius: 8px;
+      box-shadow: 0 0 25px rgba(255, 69, 0, 0.5);
+      background: #140919;
+      overflow: hidden;
+      will-change: transform;
+      transform: translateZ(0);
+    }
+
+    .shake-heavy { animation: shakeHeavyAnim 0.5s ease-in-out; }
+    .shake-light { animation: shakeLightAnim 0.3s ease-in-out; }
+    .shake-cosmic { animation: shakeCosmicAnim 0.8s ease-in-out; }
+
+    @keyframes shakeHeavyAnim {
+      0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+      10% { transform: translate3d(-8px, -6px, 0) rotate(-2deg); }
+      20% { transform: translate3d(7px, 8px, 0) rotate(2deg); }
+      30% { transform: translate3d(-6px, 4px, 0) rotate(-1deg); }
+      40% { transform: translate3d(6px, -5px, 0) rotate(1deg); }
+      50% { transform: translate3d(-4px, 5px, 0) rotate(-1deg); }
+      60% { transform: translate3d(4px, -3px, 0) rotate(0deg); }
+      70% { transform: translate3d(-2px, 3px, 0) rotate(0deg); }
+      100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+    }
+
+    @keyframes shakeLightAnim {
+      0% { transform: translate3d(0, 0, 0); }
+      20% { transform: translate3d(-4px, 4px, 0); }
+      40% { transform: translate3d(4px, -3px, 0); }
+      60% { transform: translate3d(-3px, 2px, 0); }
+      80% { transform: translate3d(2px, -1px, 0); }
+      100% { transform: translate3d(0, 0, 0); }
+    }
+
+    @keyframes shakeCosmicAnim {
+      0% { transform: scale(1) translate3d(0, 0, 0); }
+      15% { transform: scale(1.04) translate3d(-10px, 8px, 0) rotate(-2deg); }
+      30% { transform: scale(0.96) translate3d(10px, -8px, 0) rotate(3deg); }
+      45% { transform: scale(1.02) translate3d(-6px, -6px, 0) rotate(-1deg); }
+      60% { transform: scale(0.99) translate3d(6px, 5px, 0) rotate(1deg); }
+      80% { transform: scale(1.01) translate3d(-3px, 2px, 0); }
+      100% { transform: scale(1) translate3d(0, 0, 0); }
+    }
+
+    #board {
+      display: grid;
+      grid-template-columns: repeat(10, 38px);
+      grid-template-rows: repeat(10, 38px);
+      position: absolute; top: 0; left: 0; z-index: 1;
+    }
+
+    #canvas { position: absolute; top: 0; left: 0; z-index: 2; pointer-events: none; }
+    #fx-canvas { position: absolute; top: 0; left: 0; z-index: 20; pointer-events: none; }
+
+    .cell {
+      width: 38px; height: 38px;
+      border: 1px solid rgba(255, 215, 0, 0.12);
+      display: flex; align-items: flex-start; justify-content: flex-start;
+      padding: 2px; font-weight: bold; font-size: 9px; color: #b39ddb;
+      background-color: #1e1026;
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.6);
+    }
+
+    .cell:nth-child(even) { background-color: #271433; }
+
+    .cell.start-cell { background: linear-gradient(135deg, #1b5e20 0%, #0d3b11 100%) !important; color: #a5d6a7 !important; border: 1.5px solid #81c784 !important; }
+    .cell.finish-cell { background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%) !important; color: #000 !important; font-weight: 900; border: 1.5px solid #fff !important; }
+    .cell.event-tile { background: linear-gradient(135deg, #4a148c 0%, #311b92 100%) !important; border: 1px solid #ce93d8 !important; }
+    
+    .cell.ultra-tile { 
+      background: linear-gradient(135deg, #880e4f 0%, #4a148c 100%) !important; 
+      border: 1.5px solid #ffd700 !important; 
+      animation: ultraGlow 1.5s infinite alternate ease-in-out;
+    }
+    @keyframes ultraGlow {
+      0% { box-shadow: inset 0 0 5px #ffd700; }
+      100% { box-shadow: inset 0 0 12px #ffffff, 0 0 8px #ff4500; }
+    }
+
+    .player {
+      width: 20px; height: 20px;
+      position: absolute;
+      transition: left 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), top 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      line-height: 1;
+      background: transparent !important;
+      border: none !important;
+      filter: drop-shadow(0px 3px 3px rgba(0,0,0,0.9));
+      user-select: none;
+      animation: idleBounce 2s infinite ease-in-out;
+      will-change: left, top;
+    }
+
+    .player.frozen-ice { animation: frozenPulse 1.5s infinite alternate ease-in-out !important; }
+
+    .player.frozen-ice::after {
+      content: '❄️';
+      position: absolute;
+      top: -4px; right: -4px;
+      font-size: 12px;
+      filter: drop-shadow(0 0 5px #00e5ff);
+    }
+
+    .player.has-shield::after {
+      content: '🛡️';
+      position: absolute;
+      top: -6px;
+      left: -6px;
+      font-size: 12px;
+      filter: drop-shadow(0 0 6px #ffd700);
+      animation: shieldGlow 1.5s infinite alternate ease-in-out;
+    }
+
+    @keyframes shieldGlow {
+      0% { filter: drop-shadow(0 0 2px #ffd700) brightness(1); transform: scale(1); }
+      100% { filter: drop-shadow(0 0 10px #ffb300) brightness(1.4); transform: scale(1.15); }
+    }
+
+    @keyframes frozenPulse {
+      0% { filter: drop-shadow(0 0 4px #00e5ff) brightness(1.2); }
+      100% { filter: drop-shadow(0 0 12px #00b0ff) brightness(1.5); }
+    }
+
+    @keyframes idleBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+
+    .gacha-overlay {
+      position:absolute; inset:0; z-index:30; pointer-events:none;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      opacity:0; overflow:hidden;
+      background:rgba(5,2,12,.90);
+      transition:opacity .28s ease;
+    }
+    .gacha-overlay.active { opacity:1; }
+    .gacha-overlay::before, .gacha-overlay::after {
+      content:""; position:absolute; inset:-25%;
+      pointer-events:none; opacity:0;
+    }
+    .gacha-overlay.active::before {
+      opacity:1;
+      background:conic-gradient(from 0deg, transparent, rgba(255,255,255,.18), transparent 12%, transparent 30%, rgba(255,255,255,.12), transparent 45%);
+      animation:gachaSweep 1.15s linear infinite;
+    }
+    .gacha-overlay.active::after {
+      opacity:1;
+      background:radial-gradient(circle at 50% 48%, transparent 0 16%, rgba(255,255,255,.08) 25%, transparent 42%);
+      animation:gachaPulse 1s ease-in-out infinite alternate;
+    }
+
+    .gacha-box {
+      position:relative; z-index:2; width:84%; max-width:340px;
+      border:3px solid #ffd700; border-radius:18px; padding:18px 15px;
+      text-align:center; overflow:hidden;
+      background:linear-gradient(135deg,#3a1548,#1e092b);
+      box-shadow:0 0 25px #ff4500, inset 0 0 20px rgba(255,255,255,.08);
+      transform:scale(.72) rotateX(12deg);
+      transition:transform .48s cubic-bezier(.175,.885,.32,1.275);
+    }
+    .gacha-overlay.active .gacha-box { transform:scale(1) rotateX(0deg); }
+    .gacha-box::before {
+      content:""; position:absolute; inset:-60%;
+      background:conic-gradient(transparent,rgba(255,255,255,.28),transparent 15%);
+      animation:gachaSpin 1.2s linear infinite;
+    }
+    .gacha-box > * { position:relative; z-index:1; }
+
+    .gacha-title {
+      font-size:13px; font-weight:1000; letter-spacing:1.4px;
+      text-transform:uppercase; margin-bottom:6px;
+      text-shadow:0 0 10px currentColor,0 0 24px currentColor;
+    }
+    .gacha-tier {
+      display:inline-block; padding:4px 11px; margin-bottom:3px;
+      border:1px solid currentColor; border-radius:999px;
+      font-size:10px; font-weight:1000; letter-spacing:2px;
+      text-shadow:0 0 8px currentColor; box-shadow:0 0 12px currentColor;
+    }
+    .gacha-icon {
+      font-size:62px; margin:7px 0; display:inline-block;
+      will-change:transform; filter:drop-shadow(0 0 16px currentColor);
+      animation:gachaIconFloat .55s ease-in-out infinite alternate;
+    }
+    .gacha-text {
+      font-size:17px; font-weight:1000; color:#fff; text-transform:uppercase;
+      text-shadow:0 0 8px currentColor,0 0 22px currentColor;
+    }
+
+    /* Tier colors: Normal = violet, Ultra Rare = cyan/blue, Ultimate = gold/magenta. */
+    .gacha-overlay.tier-normal { background:radial-gradient(circle,#321344 0%,rgba(8,3,18,.96) 70%); }
+    .gacha-overlay.tier-normal .gacha-box { border-color:#b56cff; box-shadow:0 0 28px #8e24aa,0 0 70px rgba(142,36,170,.45),inset 0 0 20px rgba(181,108,255,.15); }
+    .gacha-overlay.tier-normal .gacha-title,.gacha-overlay.tier-normal .gacha-tier,.gacha-overlay.tier-normal .gacha-text { color:#d8a7ff; }
+
+    .gacha-overlay.tier-ultra { background:radial-gradient(circle,#062c4b 0%,rgba(2,8,22,.96) 70%); }
+    .gacha-overlay.tier-ultra .gacha-box { border-color:#00e5ff; box-shadow:0 0 35px #00e5ff,0 0 90px rgba(0,229,255,.48),inset 0 0 25px rgba(0,229,255,.18); }
+    .gacha-overlay.tier-ultra .gacha-title,.gacha-overlay.tier-ultra .gacha-tier,.gacha-overlay.tier-ultra .gacha-text { color:#72f5ff; }
+
+    .gacha-overlay.tier-ultimate { background:radial-gradient(circle,#5a073d 0%,#180018 42%,rgba(5,1,12,.97) 74%); }
+    .gacha-overlay.tier-ultimate .gacha-box {
+      border-color:#ffe600;
+      box-shadow:0 0 45px #ffe600,0 0 100px rgba(255,23,68,.55),inset 0 0 30px rgba(255,215,0,.24);
+      animation:ultimateBox .72s ease-in-out infinite alternate;
+    }
+    .gacha-overlay.tier-ultimate .gacha-title,.gacha-overlay.tier-ultimate .gacha-tier,.gacha-overlay.tier-ultimate .gacha-text { color:#ffe95b; }
+
+    @keyframes gachaSweep { to { transform:rotate(360deg); } }
+    @keyframes gachaSpin { to { transform:rotate(360deg); } }
+    @keyframes gachaPulse { from { transform:scale(.82); opacity:.45; } to { transform:scale(1.15); opacity:.9; } }
+    @keyframes gachaIconFloat { from { transform:translateY(2px) scale(.96); } to { transform:translateY(-5px) scale(1.06); } }
+    @keyframes ultimateBox { from { transform:scale(1) rotate(-.35deg); } to { transform:scale(1.025) rotate(.35deg); } }
+
+    .target-overlay, .confirm-overlay {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 40; display: none; flex-direction: column; align-items: center; justify-content: center;
+      background: rgba(13, 6, 20, 0.9);
+    }
+
+    .target-box, .confirm-box {
+      background: linear-gradient(135deg, #2a1138 0%, #150821 100%);
+      border: 2px solid #ff0055; border-radius: 12px; padding: 15px; text-align: center; width: 85%;
+      box-shadow: 0 0 20px #ff0055;
+    }
+
+    .target-btn {
+      background: #3a1548; border: 1px solid #ffd700; color: #fff; padding: 8px 12px; margin: 5px 0;
+      border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; text-align: left;
+    }
+
+    .target-btn:hover { background: #ff0055; }
+    .confirm-btn-group { display: flex; gap: 10px; margin-top: 10px; }
+
+    .controls {
+      display: flex; flex-direction: column; gap: 10px; width: 250px; background: #2a1b30;
+      padding: 15px; border-radius: 8px; border: 1px solid #8e24aa;
+    }
+
+    .status-box { font-size: 12px; line-height: 1.4; }
+    .dice-container { display: flex; justify-content: center; align-items: center; margin: 10px 0; }
+    
+    .dice-result {
+      font-size: 26px; font-weight: bold; text-align: center; color: #ffd700; width: 65px; height: 50px;
+      line-height: 50px; background: #3a2244; border: 2px solid #ffd700; border-radius: 10px;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    }
+    
+    .dice-rolling { animation: rollAnimation 0.15s infinite linear; }
+
+    @keyframes rollAnimation {
+      0% { transform: rotate(0deg) scale(0.9); }
+      50% { transform: rotate(180deg) scale(1.1); }
+      100% { transform: rotate(360deg) scale(0.9); }
+    }
+
+    .player-list { font-size: 11px; margin-top: 5px; border-top: 1px solid #555; padding-top: 5px; }
+    .player-status { display: flex; justify-content: space-between; margin-bottom: 2px; }
+
+    .win-overlay {
+      display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(18, 9, 20, 0.95); z-index: 99; flex-direction: column; align-items: center;
+      justify-content: center; border-radius: 8px;
+    }
+
+    .trophy-icon { font-size: 70px; animation: popGlow 1.2s infinite alternate ease-in-out; }
+
+    @keyframes popGlow {
+      0% { transform: scale(0.8); filter: drop-shadow(0 0 10px #ffd700); }
+      100% { transform: scale(1.1); filter: drop-shadow(0 0 30px #ff4500); }
+    }
+
+
+    /* Cinematic vignette for Special Gacha events */
+    .board-wrapper.special-vignette-active::after { content:""; position:absolute; inset:0; z-index:25; pointer-events:none; border-radius:6px; box-shadow:inset 0 0 55px 20px rgba(0,0,0,.78), inset 0 0 110px 35px rgba(45,0,60,.55); animation: specialVignettePulse 1.1s infinite alternate ease-in-out; }
+    @keyframes specialVignettePulse { from { opacity:.7; } to { opacity:1; box-shadow:inset 0 0 65px 25px rgba(0,0,0,.88), inset 0 0 120px 40px rgba(140,0,255,.35); } }
+
+    .win-text { color: #ffd700; font-size: 18px; font-weight: bold; margin: 10px 0; text-align: center; }
+  
+    /* ===== CINEMATIC SPECIAL EVENT VIGNETTE ===== */
+    .special-vignette {
+      position:absolute; inset:0; z-index:24; pointer-events:none; opacity:0;
+      background:
+        radial-gradient(circle at 50% 45%, rgba(255,255,255,0) 20%, rgba(0,0,0,.08) 42%, rgba(0,0,0,.82) 100%),
+        linear-gradient(90deg, rgba(0,0,0,.78), transparent 24%, transparent 76%, rgba(0,0,0,.78));
+      transition:opacity .25s ease;
+      mix-blend-mode:multiply;
+    }
+    .special-vignette.active { opacity:1; animation:specialVignettePulse .9s infinite alternate; }
+    @keyframes specialVignettePulse {
+      from { filter:brightness(.85) contrast(1.1); }
+      to { filter:brightness(1.1) contrast(1.28); }
+    }
+    .special-banner {
+      position:absolute; left:50%; top:50%; transform:translate(-50%,-50%) scale(.7);
+      z-index:60; pointer-events:none; opacity:0; width:88%; text-align:center;
+      font-weight:900; letter-spacing:2px; color:#fff;
+      text-shadow:0 0 8px #fff,0 0 22px #ffea00,0 0 42px #ff1744;
+      font-size:20px;
+    }
+    .special-banner.active { animation:specialBanner .9s ease forwards; }
+    @keyframes specialBanner {
+      0%{opacity:0;transform:translate(-50%,-50%) scale(.55) rotate(-4deg)}
+      45%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}
+      100%{opacity:.9;transform:translate(-50%,-50%) scale(1)}
+    }
+
+  
+    /* ===== DRAGON REALM PREMIUM MENU ===== */
+    #game-setup, .menu-screen, #setup-screen {
+      position: relative;
+      overflow: hidden;
+      border-radius: 28px;
+      background:
+        linear-gradient(135deg, rgba(5,8,20,.92), rgba(22,5,40,.88)),
+        radial-gradient(circle at 50% 20%, rgba(255,112,0,.22), transparent 38%);
+      border: 1px solid rgba(255,191,0,.45);
+      box-shadow: 0 0 35px rgba(255,92,0,.25), inset 0 0 70px rgba(110,0,255,.12);
+    }
+    #game-setup::before, .menu-screen::before, #setup-screen::before {
+      content:"";
+      position:absolute; inset:-8%;
+      pointer-events:none;
+      opacity:.52;
+      background-image:
+        radial-gradient(circle at 72% 22%, rgba(255,120,0,.55) 0 1px, transparent 2px),
+        radial-gradient(circle at 20% 80%, rgba(255,230,120,.4) 0 1px, transparent 2px),
+        linear-gradient(115deg, transparent 42%, rgba(255,115,0,.18) 50%, transparent 58%);
+      background-size: 38px 38px, 55px 55px, 100% 100%;
+      animation: menuEmbers 7s linear infinite;
+    }
+    #game-setup::after, .menu-screen::after, #setup-screen::after {
+      content:"🐉";
+      position:absolute;
+      right:-18px;
+      bottom:-55px;
+      font-size:300px;
+      line-height:1;
+      opacity:.16;
+      filter: drop-shadow(0 0 28px rgba(255,80,0,.9));
+      transform: rotate(-18deg);
+      pointer-events:none;
+      animation: dragonPulse 4s ease-in-out infinite;
+    }
+    @keyframes menuEmbers { to { background-position: 120px -160px, -100px 140px, 0 0; } }
+    @keyframes dragonPulse { 50% { transform:rotate(-14deg) scale(1.06); opacity:.24; } }
+
+    .dragon-menu-title {
+      position:relative; z-index:3;
+      text-align:center;
+      font-size:clamp(28px,5vw,52px);
+      font-weight:1000;
+      letter-spacing:3px;
+      margin:6px 0 4px;
+      color:#fff4d6;
+      text-shadow:0 0 8px #fff,0 0 22px #ff9d00,0 0 48px #ff3d00;
+      animation:titleFlame 2.6s ease-in-out infinite;
+    }
+    .dragon-menu-subtitle {
+      position:relative; z-index:3;
+      text-align:center;
+      color:#ffc766;
+      font-weight:800;
+      letter-spacing:4px;
+      font-size:11px;
+      margin-bottom:18px;
+      text-transform:uppercase;
+    }
+    @keyframes titleFlame { 50% { text-shadow:0 0 10px #fff,0 0 32px #ff6d00,0 0 70px #e040fb; transform:scale(1.015); } }
+
+    .dragon-menu-panel {
+      position:relative; z-index:4;
+      backdrop-filter:blur(12px);
+      background:linear-gradient(145deg, rgba(255,255,255,.08), rgba(0,0,0,.22));
+      border:1px solid rgba(255,196,90,.28);
+      border-radius:20px;
+      padding:14px;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 12px 30px rgba(0,0,0,.28);
+    }
+    .dragon-menu-btn {
+      position:relative; overflow:hidden;
+      border:1px solid #ffd166 !important;
+      background:linear-gradient(135deg,#7a1200,#ff5e00 52%,#ffb300) !important;
+      color:white !important;
+      text-shadow:0 1px 3px #5a0000;
+      box-shadow:0 8px 22px rgba(255,74,0,.35), inset 0 1px 0 rgba(255,255,255,.28);
+      transform:translateY(0);
+      transition:.2s ease;
+    }
+    .dragon-menu-btn:hover { transform:translateY(-2px) scale(1.02); filter:brightness(1.13); }
+    .dragon-menu-btn::after {
+      content:""; position:absolute; top:-80%; left:-30%; width:30%; height:260%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);
+      transform:rotate(25deg); animation:btnShine 3s infinite;
+    }
+    @keyframes btnShine { 0%,55%{left:-40%} 85%,100%{left:120%} }
+
+    .dragon-character-card {
+      position:relative;
+      border-radius:16px !important;
+      border:1px solid rgba(255,190,80,.35) !important;
+      background:radial-gradient(circle at 50% 15%,rgba(255,170,0,.2),rgba(20,5,40,.72)) !important;
+      box-shadow:0 8px 18px rgba(0,0,0,.25), inset 0 0 18px rgba(255,95,0,.08);
+      transition:.2s ease;
+    }
+    .dragon-character-card:hover {
+      transform:translateY(-4px) scale(1.04);
+      box-shadow:0 0 24px rgba(255,112,0,.5);
+    }
+
+</style>
+</head>
+<body>
+
+  <h1>🐉 Ular Tangga: Dragon Realm 🐉</h1>
+
+  <div id="setup-screen" class="setup-screen">
+    <div class="dragon-badge">🐉</div>
+    <h2>Pilih Jumlah & Karakter</h2>
+    
+    <label style="font-size: 11px; font-weight: bold; color: #ffd700;">Jumlah Pemain:</label>
+    <select id="player-count" class="custom-select" style="margin-bottom: 10px;" onchange="renderCharacterSelection()">
+      <option value="2">⚔️ 2 Pemain (Duel)</option>
+      <option value="3">⚔️ 3 Pemain (Pertempuran)</option>
+      <option value="4">⚔️ 4 Pemain (Bebas Rencana)</option>
+      <option value="5">⚔️ 5 Pemain (Perang Akbar)</option>
+      <option value="6">⚔️ 6 Pemain (Battle Royale)</option>
+    </select>
+
+    <div id="character-select-container"></div>
+
+    <button class="btn-action" onclick="startGame()">Mulai Permainan 🚀</button>
+  </div>
+
+  <div id="game-container" class="game-container">
+    <div class="board-wrapper" id="board-wrapper">
+      <div id="board"></div>
+      <canvas id="canvas" width="380" height="380"></canvas>
+      <canvas id="fx-canvas" width="380" height="380"></canvas>
+      <div id="special-vignette" class="special-vignette"></div>
+      <div id="special-banner" class="special-banner"></div>
+      
+      <div id="p1" class="player"></div>
+      <div id="p2" class="player"></div>
+      <div id="p3" class="player" style="display:none;"></div>
+      <div id="p4" class="player" style="display:none;"></div>
+      <div id="p5" class="player" style="display:none;"></div>
+      <div id="p6" class="player" style="display:none;"></div>
+
+      <div id="gacha-overlay" class="gacha-overlay">
+        <div class="gacha-box" id="gacha-box-container">
+          <div class="gacha-title" id="gacha-title-text">🎰 GACHA SIHIR REALM 🎰</div>
+          <div class="gacha-tier" id="gacha-tier-label">NORMAL</div>
+          <div id="gacha-icon" class="gacha-icon">🔮</div>
+          <div id="gacha-text" class="gacha-text">MENGACAK EVENT...</div>
+        </div>
+      </div>
+
+      <div id="target-overlay" class="target-overlay">
+        <div class="target-box">
+          <div style="font-size: 13px; font-weight: bold; color: #ff0055; margin-bottom: 8px;">🎯 PILIH TARGET SERANGAN</div>
+          <div id="target-buttons-container"></div>
+        </div>
+      </div>
+
+      <div id="confirm-overlay" class="confirm-overlay">
+        <div class="confirm-box">
+          <div style="font-size: 14px; font-weight: bold; color: #ffd700; margin-bottom: 8px;">⚠️ KONFIRMASI RESTART</div>
+          <div style="font-size: 12px; color: #fff;">Apakah Anda yakin ingin mengulang permainan dari awal?</div>
+          <div class="confirm-btn-group">
+            <button class="btn-action" style="background: #e53935;" onclick="confirmRestart(true)">Ya, Restart 🔄</button>
+            <button class="btn-action" style="background: #555;" onclick="confirmRestart(false)">Batal ❌</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="win-overlay" class="win-overlay">
+        <div class="trophy-icon">🏆</div>
+        <div id="win-text" class="win-text">Kesatria Menang!</div>
+        <button class="btn-action" style="width: auto; padding: 10px 20px;" onclick="resetToSetup()">Main Lagi 🔄</button>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="status-box">
+        <p>Giliran: <b id="turn-indicator" style="color:#ff3333;">Pemain 1</b></p>
+        <div class="dice-container">
+          <div class="dice-result" id="dice-display">🎲</div>
+        </div>
+        <p id="log-text">Kocok dadu untuk bertarung!</p>
+      </div>
+      <button id="roll-btn" class="btn-action" onclick="rollDice()">Kocok Dadu 🎲</button>
+      <button class="btn-action" style="background: #444; padding: 6px; margin-top: 5px;" onclick="promptRestart()">Restart Game 🔄</button>
+      <div class="player-list" id="player-list"></div>
+    </div>
+  </div>
+
+  <script>
+    let playerCount = 2;
+    let positions = { 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1 };
+    let frozenPlayers = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
+    let doubleRoll = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
+    let hasShield = { 1: false, 2: false, 3: false, 4: false, 5: false, 6: false };
+    let multiDiceNextTurn = { 1: false, 2: false, 3: false, 4: false, 5: false, 6: false };
+
+    let availableAvatars = ["🗡️", "🛡️", "🐉", "🧙‍♂️", "🏹", "🥷", "👑", "🧟‍♂️", "🦅", "🦄"];
+    let playerAvatars = { 1: '🗡️', 2: '🛡️', 3: '🐉', 4: '🧙‍♂️', 5: '🏹', 6: '👑' };
+    let playerNames = { 1: 'Kesatria 1', 2: 'Kesatria 2', 3: 'Kesatria 3', 4: 'Kesatria 4', 5: 'Kesatria 5', 6: 'Kesatria 6' };
+    let playerColors = { 1: '#ff3333', 2: '#3399ff', 3: '#33cc33', 4: '#ffcc00', 5: '#ff00ff', 6: '#00ffff' };
+
+    let currentPlayer = 1;
+    let isMoving = false;
+    let lastDiceRoll = 0;
+
+    let goodDragons = {};
+    let evilDragons = {};
+    let snakeColors = ['#4caf50', '#f44336', '#2196f3', '#ff9800', '#e91e63'];
+
+    const ultimateEventsPool = [
+      {
+        name: "BENCANA KIAMAT KOSMIK",
+        desc: "SERANGAN ULTIMATE DAHSHAT! Menghempaskan SEMUA MUSUH ke petak 1, MEMBEKUKAN MEREKA 1 RONDE, mendapat 2x giliran ekstra & perisai!",
+        type: "cosmic_apocalypse",
+        icon: "🌌"
+      },
+      { 
+        name: "RESTU DEWA NAGA", 
+        desc: "KEJAIBAN TERTINGGI! Langsung teleportasi menuju garis Finish petak 100!", 
+        type: "teleport_fixed", 
+        val: 100, 
+        icon: "🌟" 
+      }
+    ];
+
+    const ultraRarePool = [
+      { name: "KEMURKAAN DEWA NAGA", desc: "Memanggil murka Dewa Naga untuk membombardir 1 lawan dengan napas api brutal dan menghantamnya mundur 15 petak!", type: "move_self", val: 15, icon: "🐉" },
+      { name: "PENGHENTI WAKTU", desc: "Menghentikan waktu! Mendapatkan 2 kali giliran ekstra!", type: "super_double_turn", val: 2, icon: "⏳" },
+      { name: "KIAMAT REALM", desc: "Bencana Dahsyat! Menghempaskan SEMUA MUSUH jatuh ke petak 1!", type: "mass_apocalypse", icon: "💥" },
+      { name: "KUTUKAN ABADI", desc: "Pilih 1 musuh untuk dibekukan total selama 2 PUTARAN PENUH!", type: "target_super_freeze", val: 2, icon: "🧊" },
+      { name: "PENGHISAP JIWA", desc: "Mencuri tempat musuh terdepan, lalu melemparnya mundur 10 petak!", type: "steal_lead", icon: "💀" }
+    ];
+
+    const masterEventsPool = [
+      { name: "Sayap Angin", desc: "Maju 3 langkah!", type: "move_self", val: 3, icon: "🍃" },
+      { name: "Sepatu Emas", desc: "Meluncur maju 4 langkah!", type: "move_self", val: 4, icon: "👟" },
+      { name: "Ramuan Kecepatan", desc: "Dapat giliran ekstra!", type: "double_turn", val: 1, icon: "⚡" },
+      { name: "Sayap Naga", desc: "Terbang naik 6 petak!", type: "move_self", val: 6, icon: "🐉" },
+      { name: "Perisai Sihir Pelindung", desc: "Mendapatkan perisai pelindung yang menahan 1 kali serangan musuh!", type: "gain_shield", icon: "🛡️" },
+      { name: "Dadu Mega ×5", desc: "Lempar 5 Dadu sekaligus pada giliran selanjutnya!", type: "five_dice_next", val: 5, icon: "🎲" },
+      { name: "Lumpur Hisap", desc: "Mundur 3 langkah.", type: "move_self", val: -3, icon: "🕳️" },
+      { name: "Napas Es", desc: "Membeku 1 putaran penuh!", type: "freeze_self", val: 1, icon: "❄️" },
+      { name: "Portal Neraka", desc: "Kutukan dahsyat! Terlempar jatuh langsung ke petak 1!", type: "teleport_fixed", val: 1, icon: "🌀" },
+      { name: "Tornado Dahsyat", desc: "Badai besar menghempaskan SEMUA musuh mundur 5-50 petak!", type: "mass_tornado", icon: "🌪️" },
+      { name: "Hantaman Meteor", desc: "Pilih 1 lawan untuk dimundurkan 30 langkah!", type: "target_demote", val: -30, icon: "☄️" },
+      { name: "Longsoran Batu", desc: "Pilih 1 lawan untuk dimundurkan 7 langkah!", type: "target_demote", val: -7, icon: "🪨" },
+      { name: "Petir Tunggal", desc: "Pilih 1 lawan untuk dimundurkan 4 langkah!", type: "target_demote", val: -4, icon: "⚡" },
+      { name: "Pembeku Jiwa", desc: "Pilih 1 lawan untuk dibekukan 1 putaran!", type: "target_freeze", val: 1, icon: "❄️" },
+      { name: "Racun Sasaran", desc: "Pilih 1 lawan untuk dimundurkan 6 langkah!", type: "target_demote", val: -6, icon: "🧪" },
+      { name: "Tukar Tempat Target", desc: "Pilih 1 lawan untuk bertukar posisi!", type: "target_swap", icon: "🔄" }
+    ];
+
+    let specialEventTiles = {};
+    let specialUltraTiles = {};
+
+    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+    function setSpecialVignette(active) {
+      document.getElementById('board-wrapper').classList.toggle('special-vignette-active', !!active);
+    }
+
+    async function playShieldBreakAnimation(posNum) {
+      const canvas=document.getElementById('fx-canvas'), ctx=canvas.getContext('2d');
+      const c=getCellCenter(posNum); triggerBoardShake('heavy');
+      for(let f=0; f<24; f++){
+        ctx.clearRect(0,0,canvas.width,canvas.height); const t=f/24;
+        ctx.save(); ctx.translate(c.x,c.y);
+        ctx.strokeStyle=`rgba(255,215,0,${1-t})`; ctx.lineWidth=5; ctx.shadowColor='#ffd700'; ctx.shadowBlur=24;
+        ctx.beginPath(); ctx.arc(0,0,28+t*30,0,Math.PI*2); ctx.stroke();
+        for(let i=0;i<14;i++){ const a=i*Math.PI*2/14+t*3, d=18+t*55; ctx.fillStyle=`rgba(255,235,120,${1-t})`; ctx.beginPath(); ctx.arc(Math.cos(a)*d,Math.sin(a)*d,2.5,0,Math.PI*2); ctx.fill(); }
+        ctx.restore(); await sleep(18);
+      } ctx.clearRect(0,0,canvas.width,canvas.height);
+    }
+
+    function randomizeDragons() {
+      goodDragons = {}; evilDragons = {};
+      let usedTiles = new Set([1, 100]);
+
+      for (let i = 0; i < 7; i++) {
+        let start = Math.floor(Math.random() * 70) + 2;
+        let distance = Math.floor(Math.random() * 25) + 15;
+        let end = Math.min(start + distance, 97);
+        if (!usedTiles.has(start) && !usedTiles.has(end) && start < end) {
+          goodDragons[start] = end; usedTiles.add(start); usedTiles.add(end);
+        }
+      }
+
+      for (let i = 0; i < 6; i++) {
+        let start = Math.floor(Math.random() * 60) + 35;
+        let distance = Math.floor(Math.random() * 25) + 15;
+        let end = Math.max(start - distance, 2);
+        if (!usedTiles.has(start) && !usedTiles.has(end) && start > end) {
+          evilDragons[start] = end; usedTiles.add(start); usedTiles.add(end);
+        }
+      }
+    }
+
+    function renderCharacterSelection() {
+      const count = parseInt(document.getElementById('player-count').value);
+      const container = document.getElementById('character-select-container');
+      container.innerHTML = '';
+
+      for (let i = 1; i <= count; i++) {
+        const selectedAvatar = playerAvatars[i] || availableAvatars[(i - 1) % availableAvatars.length];
+        const avatarOptionsHtml = availableAvatars.map(e => `
+          <button type="button" class="character-option ${e === selectedAvatar ? 'selected' : ''}"
+            data-player="${i}" data-avatar="${e}" onclick="selectCharacter(${i}, '${e}')">${e}</button>
+        `).join('');
+
+        container.innerHTML += `
+          <div class="player-select-box">
+            <div class="player-select-title" style="color:${playerColors[i]}">Pemain ${i}</div>
+            <input type="text" id="input-name-${i}" class="custom-input player-name-input"
+              value="${playerNames[i] ? playerNames[i].replace(/^.+?\s/, '') : 'Pemain ' + i}"
+              placeholder="Masukkan nama pemain" maxlength="20">
+            <div style="font-size:10px; color:#d1c4e9; margin-top:8px;">Pilih Karakter:</div>
+            <div class="character-picker" id="character-picker-${i}">${avatarOptionsHtml}</div>
+            <input type="hidden" id="select-avatar-${i}" value="${selectedAvatar}">
+          </div>
+        `;
+      }
+    }
+
+    function selectCharacter(playerId, avatar) {
+      document.getElementById(`select-avatar-${playerId}`).value = avatar;
+      document.querySelectorAll(`#character-picker-${playerId} .character-option`).forEach(btn => {
+        btn.classList.toggle('selected', btn.dataset.avatar === avatar);
+      });
+      playerAvatars[playerId] = avatar;
+    }
+
+    function randomizeSpecialEvents() {
+      specialEventTiles = {};
+      specialUltraTiles = {};
+      let availableTiles = [];
+      for (let i = 2; i < 100; i++) {
+        if (!goodDragons[i] && !evilDragons[i]) availableTiles.push(i);
+      }
+
+      for (let i = availableTiles.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [availableTiles[i], availableTiles[j]] = [availableTiles[j], availableTiles[i]];
+      }
+
+      for (let i = 0; i < 4 && i < availableTiles.length; i++) {
+        specialUltraTiles[availableTiles[i]] = true;
+      }
+
+      for (let i = 4; i < 30 && i < availableTiles.length; i++) {
+        specialEventTiles[availableTiles[i]] = true;
+      }
+    }
+
+    function startGame() {
+      playerCount = parseInt(document.getElementById('player-count').value);
+
+      for (let i = 1; i <= playerCount; i++) {
+        let nameVal = document.getElementById(`input-name-${i}`).value.trim();
+        let avatarVal = document.getElementById(`select-avatar-${i}`).value;
+
+        playerAvatars[i] = avatarVal;
+        playerNames[i] = nameVal ? `${avatarVal} ${nameVal}` : `${avatarVal} Pemain ${i}`;
+        document.getElementById(`p${i}`).innerText = avatarVal;
+      }
+
+      document.getElementById('setup-screen').style.display = 'none';
+      document.getElementById('game-container').style.display = 'flex';
+      document.getElementById('win-overlay').style.display = 'none';
+
+      positions = { 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1 };
+      frozenPlayers = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
+      doubleRoll = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
+      hasShield = { 1: false, 2: false, 3: false, 4: false, 5: false, 6: false };
+      multiDiceNextTurn = { 1: false, 2: false, 3: false, 4: false, 5: false, 6: false };
+      currentPlayer = 1;
+      isMoving = false;
+
+      randomizeDragons();
+      randomizeSpecialEvents();
+
+      document.getElementById('roll-btn').disabled = false;
+      document.getElementById('turn-indicator').innerText = playerNames[1];
+      document.getElementById('turn-indicator').style.color = playerColors[1];
+      document.getElementById('log-text').innerText = "Kocok dadu untuk bertarung!";
+      document.getElementById('dice-display').innerText = "🎲";
+
+      for (let i = 1; i <= 6; i++) {
+        document.getElementById(`p${i}`).style.display = i <= playerCount ? 'flex' : 'none';
+      }
+
+      initBoard();
+      drawBoardVisuals();
+      updatePlayerVisuals();
+    }
+
+    function promptRestart() {
+      document.getElementById('confirm-overlay').style.display = 'flex';
+    }
+
+    function confirmRestart(agreed) {
+      document.getElementById('confirm-overlay').style.display = 'none';
+      if (agreed) {
+        resetToSetup();
+      }
+    }
+
+    function resetToSetup() {
+      document.getElementById('win-overlay').style.display = 'none';
+      document.getElementById('game-container').style.display = 'none';
+      document.getElementById('setup-screen').style.display = 'block';
+    }
+
+    function initBoard() {
+      const board = document.getElementById('board');
+      board.innerHTML = '';
+      for (let row = 9; row >= 0; row--) {
+        for (let col = 0; col < 10; col++) {
+          let cellNum = (row % 2 === 1) ? (row * 10) + (10 - col) : (row * 10) + (col + 1);
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+          cell.id = `cell-${cellNum}`;
+          cell.innerText = cellNum;
+
+          if (cellNum === 1) {
+            cell.classList.add('start-cell');
+            cell.innerText = "1 🚀";
+          } else if (cellNum === 100) {
+            cell.classList.add('finish-cell');
+            cell.innerText = "100 🏆";
+          } else if (specialUltraTiles[cellNum]) {
+            cell.title = "Petak Gacha Spesial (Ultimate & Ultra Rare)";
+            cell.classList.add('ultra-tile');
+            cell.innerText = cellNum + "🌟";
+          } else if (specialEventTiles[cellNum]) {
+            cell.title = "Petak Gacha Biasa";
+            cell.classList.add('event-tile');
+          }
+
+          board.appendChild(cell);
+        }
+      }
+    }
+
+    function getCellCenter(num) {
+      const cell = document.getElementById(`cell-${num}`);
+      return { x: cell.offsetLeft + 19, y: cell.offsetTop + 19 };
+    }
+
+    function triggerBoardShake(type = 'light') {
+      const wrapper = document.getElementById('board-wrapper');
+      const cls = type === 'heavy' ? 'shake-heavy' : (type === 'cosmic' ? 'shake-cosmic' : 'shake-light');
+      wrapper.classList.remove('shake-heavy', 'shake-light', 'shake-cosmic');
+      void wrapper.offsetWidth;
+      wrapper.classList.add(cls);
+      setTimeout(() => wrapper.classList.remove(cls), type === 'heavy' ? 500 : (type === 'cosmic' ? 800 : 300));
+    }
+
+    function drawImpactCracks(ctx, centerX, centerY, maxRadius = 35) {
+      ctx.save();
+      ctx.shadowColor = "rgba(0, 0, 0, 0.9)";
+      ctx.shadowBlur = 6;
+      ctx.strokeStyle = "rgba(10, 3, 2, 0.95)";
+      ctx.lineWidth = 2.2;
+
+      let branches = 6;
+      for (let i = 0; i < branches; i++) {
+        let angle = (Math.PI * 2 / branches) * i + (Math.random() - 0.5) * 0.4;
+        let curX = centerX;
+        let curY = centerY;
+        let dist = 0;
+
+        ctx.beginPath();
+        ctx.moveTo(curX, curY);
+
+        while (dist < maxRadius) {
+          let step = Math.random() * 7 + 4;
+          dist += step;
+          angle += (Math.random() - 0.5) * 0.5;
+          curX += Math.cos(angle) * step;
+          curY += Math.sin(angle) * step;
+          ctx.lineTo(curX, curY);
+
+          if (Math.random() < 0.4 && dist < maxRadius * 0.8) {
+            let subAngle = angle + (Math.random() > 0.5 ? 0.7 : -0.7);
+            let subX = curX + Math.cos(subAngle) * 10;
+            let subY = curY + Math.sin(subAngle) * 10;
+            ctx.moveTo(curX, curY);
+            ctx.lineTo(subX, subY);
+            ctx.moveTo(curX, curY);
+          }
+        }
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    function drawBoardVisuals() {
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let start in goodDragons) {
+        let p1 = getCellCenter(start);
+        let p2 = getCellCenter(goodDragons[start]);
+        drawLadderAsset(ctx, p1, p2);
+      }
+
+      let snakeIndex = 0;
+      for (let start in evilDragons) {
+        let p1 = getCellCenter(start);
+        let p2 = getCellCenter(evilDragons[start]);
+        let color = snakeColors[snakeIndex % snakeColors.length];
+        drawCartoonSnake(ctx, p1, p2, color);
+        snakeIndex++;
+      }
+    }
+
+    function drawLadderAsset(ctx, p1, p2) {
+      ctx.save();
+      let dx = p2.x - p1.x;
+      let dy = p2.y - p1.y;
+      let distance = Math.sqrt(dx * dx + dy * dy);
+      let angle = Math.atan2(dy, dx);
+
+      ctx.translate(p1.x, p1.y);
+      ctx.rotate(angle);
+
+      let ladderWidth = 14;
+      let rungSpacing = 12;
+
+      ctx.shadowColor = 'rgba(0,0,0,0.4)';
+      ctx.shadowBlur = 6;
+      ctx.shadowOffsetX = 3;
+      ctx.shadowOffsetY = 3;
+
+      ctx.fillStyle = '#ff9800';
+      ctx.strokeStyle = '#e65100';
+      ctx.lineWidth = 1.5;
+
+      ctx.beginPath();
+      ctx.rect(0, -ladderWidth/2, distance, 3.5);
+      ctx.rect(0, ladderWidth/2 - 3.5, distance, 3.5);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#ffb74d';
+      for (let d = 8; d < distance - 5; d += rungSpacing) {
+        ctx.beginPath();
+        ctx.rect(d, -ladderWidth/2, 3, ladderWidth);
+        ctx.fill();
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+
+    function drawCartoonSnake(ctx, headPos, tailPos, color) {
+      ctx.save();
+      let dx = tailPos.x - headPos.x;
+      let dy = tailPos.y - headPos.y;
+      let distance = Math.sqrt(dx * dx + dy * dy);
+      let angle = Math.atan2(dy, dx);
+
+      ctx.shadowColor = "rgba(0, 0, 0, 0.4)";
+      ctx.shadowBlur = 5;
+
+      let steps = 30;
+      let points = [];
+      for (let i = 0; i <= steps; i++) {
+        let t = i / steps;
+        let currDist = t * distance;
+        let wave = Math.sin(t * Math.PI * 2.5) * 14;
+        let x = headPos.x + Math.cos(angle) * currDist - Math.sin(angle) * wave;
+        let y = headPos.y + Math.sin(angle) * currDist + Math.cos(angle) * wave;
+        let width = (1 - t * 0.6) * 12; 
+        points.push({x, y, width});
+      }
+
+      for (let i = 0; i < points.length - 1; i++) {
+        ctx.beginPath();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = points[i].width;
+        ctx.lineCap = 'round';
+        ctx.moveTo(points[i].x, points[i].y);
+        ctx.lineTo(points[i+1].x, points[i+1].y);
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(headPos.x, headPos.y, 8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+
+    // ===== CINEMATIC SYSTEM UNTUK ULTRA RARE & ULTIMATE =====
+    function specialStart(title) {
+      const v = document.getElementById('special-vignette');
+      const b = document.getElementById('special-banner');
+      v.classList.add('active');
+      b.innerText = title;
+      b.classList.remove('active'); void b.offsetWidth; b.classList.add('active');
+      triggerBoardShake('cosmic');
+    }
+    function specialEnd() {
+      const v = document.getElementById('special-vignette');
+      const b = document.getElementById('special-banner');
+      v.classList.remove('active');
+      b.classList.remove('active');
+    }
+    function cinematicParticles(ctx, count, cx, cy, colors, spread=180) {
+      return Array.from({length:count}, () => ({
+        x:cx+(Math.random()-.5)*spread, y:cy+(Math.random()-.5)*spread,
+        vx:(Math.random()-.5)*7, vy:(Math.random()-.5)*7,
+        r:Math.random()*3+1, color:colors[Math.floor(Math.random()*colors.length)],
+        life:1
+      }));
+    }
+    async function playDragonWrathAttack(attacker, victim) {
+      const c=document.getElementById('fx-canvas'), ctx=c.getContext('2d');
+      const A=getCellCenter(positions[attacker]), B=getCellCenter(positions[victim]);
+      const ta=document.getElementById(`p${attacker}`), tv=document.getElementById(`p${victim}`);
+      specialStart("🐉 KEMURKAAN DEWA NAGA 🐉");
+      let fire=cinematicParticles(ctx,120,A.x,A.y,['#ffea00','#ff6d00','#ff1744','#fff'],250);
+      // charge-up naga
+      for(let f=0;f<24;f++){ctx.clearRect(0,0,380,380);let r=15+f*2.8;
+        let g=ctx.createRadialGradient(A.x,A.y,1,A.x,A.y,r);g.addColorStop(0,'#fff');g.addColorStop(.25,'#ffea00');g.addColorStop(.7,'rgba(255,61,0,.8)');g.addColorStop(1,'rgba(255,0,0,0)');
+        ctx.fillStyle=g;ctx.shadowColor='#ff3d00';ctx.shadowBlur=35;ctx.beginPath();ctx.arc(A.x,A.y,r,0,Math.PI*2);ctx.fill();
+        fire.forEach(p=>{p.x+=p.vx*.3;p.y+=p.vy*.3;ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill()});
+        await sleep(18);
+      }
+      // serangan napas api brutal menuju lawan
+      for(let f=0;f<34;f++){ctx.clearRect(0,0,380,380);let q=f/33,x=A.x+(B.x-A.x)*q,y=A.y+(B.y-A.y)*q;
+        ctx.strokeStyle='#ff6d00';ctx.lineWidth=16;ctx.shadowColor='#ff1744';ctx.shadowBlur=30;ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.lineTo(x,y);ctx.stroke();
+        ctx.strokeStyle='#fff176';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.lineTo(x,y);ctx.stroke();
+        for(let i=0;i<35;i++){let px=x+(Math.random()-.5)*38,py=y+(Math.random()-.5)*38;ctx.fillStyle=i%2?'#ff3d00':'#ffea00';ctx.beginPath();ctx.arc(px,py,Math.random()*4+1,0,Math.PI*2);ctx.fill()}
+        await sleep(16);
+      }
+      triggerBoardShake('heavy');
+      // impact / ledakan pada lawan
+      for(let f=0;f<26;f++){ctx.clearRect(0,0,380,380);let r=8+f*6;
+        ctx.fillStyle=`rgba(255,61,0,${1-f/30})`;ctx.shadowColor='#ffea00';ctx.shadowBlur=45;ctx.beginPath();ctx.arc(B.x,B.y,r,0,Math.PI*2);ctx.fill();
+        ctx.strokeStyle=`rgba(255,255,255,${1-f/28})`;ctx.lineWidth=3;ctx.beginPath();ctx.arc(B.x,B.y,r*1.2,0,Math.PI*2);ctx.stroke();
+        tv.style.transform=`translate(${(Math.random()-.5)*12}px,${(Math.random()-.5)*12}px) rotate(${(Math.random()-.5)*35}deg)`;
+        await sleep(18);
+      }
+      tv.style.transform='none'; ta.style.transform='none';
+      drawImpactCracks(ctx,B.x,B.y,75); await sleep(180); ctx.clearRect(0,0,380,380); specialEnd();
+    }
+
+    // =========================================================================
+    // EFEK VISUAL TIER ULTIMATE & ULTRA RARE (ULTRA HIGH QUALITY & ZERO-BUG)
+    // =========================================================================
+
+    // 1. KIAMAT KOSMIK & KIAMAT REALM (ULTIMATE & ULTRA RARE)
+    async function playCosmicApocalypseAnimation() {
+      const c=document.getElementById('fx-canvas'),ctx=c.getContext('2d'),C={x:190,y:190};
+      specialStart("🌌 BENCANA KIAMAT KOSMIK 🌌");
+      let ps=cinematicParticles(ctx,180,C.x,C.y,['#e040fb','#00e5ff','#7c4dff','#fff176'],400);
+      for(let f=0;f<70;f++){ctx.clearRect(0,0,380,380);let q=f/69;
+        ctx.fillStyle=`rgba(5,0,18,${.3+q*.5})`;ctx.fillRect(0,0,380,380);
+        ps.forEach(p=>{let dx=C.x-p.x,dy=C.y-p.y,d=Math.hypot(dx,dy)||1;p.x+=dx/d*(2+q*7);p.y+=dy/d*(2+q*7);ctx.fillStyle=p.color;ctx.shadowColor=p.color;ctx.shadowBlur=14;ctx.beginPath();ctx.arc(p.x,p.y,p.r*(1+q),0,Math.PI*2);ctx.fill()});
+        for(let k=0;k<3;k++){ctx.strokeStyle=k===0?'#e040fb':k===1?'#00e5ff':'#fff';ctx.lineWidth=2+k*2;ctx.shadowColor=ctx.strokeStyle;ctx.shadowBlur=25;ctx.beginPath();ctx.arc(C.x,C.y,25+q*145+k*18,f*.12+k,Math.PI*2+f*.12+k);ctx.stroke()}
+        await sleep(16);
+      }
+      triggerBoardShake('heavy');
+      for(let f=0;f<28;f++){ctx.clearRect(0,0,380,380);let r=f*16;ctx.strokeStyle=`rgba(255,235,59,${1-f/30})`;ctx.lineWidth=9;ctx.shadowColor='#ff1744';ctx.shadowBlur=45;ctx.beginPath();ctx.arc(C.x,C.y,r,0,Math.PI*2);ctx.stroke();await sleep(15)}
+      drawImpactCracks(ctx,C.x,C.y,180);await sleep(250);ctx.clearRect(0,0,380,380);specialEnd();
+    }
+
+    async function playApocalypseAnimation() {
+      await playCosmicApocalypseAnimation();
+    }
+
+    // 2. RESTU DEWA NAGA (ULTIMATE)
+    async function playBlessingAnimation(posNum) {
+      const c=document.getElementById('fx-canvas'),ctx=c.getContext('2d'),P=getCellCenter(posNum);
+      specialStart("🌟 RESTU DEWA NAGA 🌟");
+      let stars=cinematicParticles(ctx,110,P.x,P.y,['#fff','#ffea00','#ffd54f','#80deea'],280);
+      for(let f=0;f<62;f++){ctx.clearRect(0,0,380,380);let q=f/61,w=35+Math.sin(q*Math.PI)*95;
+        let g=ctx.createLinearGradient(P.x-w,0,P.x+w,0);g.addColorStop(0,'rgba(255,215,0,0)');g.addColorStop(.5,'rgba(255,255,255,.95)');g.addColorStop(1,'rgba(255,215,0,0)');ctx.fillStyle=g;ctx.shadowColor='#ffd700';ctx.shadowBlur=35;ctx.fillRect(P.x-w,0,w*2,380);
+        stars.forEach(s=>{s.x+=(P.x-s.x)*.025;s.y-=1.2;ctx.fillStyle=s.color;ctx.shadowColor=s.color;ctx.shadowBlur=12;ctx.beginPath();ctx.arc(s.x,s.y,s.r+2,0,Math.PI*2);ctx.fill()});
+        ctx.strokeStyle='#ffea00';ctx.lineWidth=4;ctx.beginPath();ctx.arc(P.x,P.y,25+q*110,f*.15,f*.15+Math.PI*1.6);ctx.stroke();await sleep(17)}
+      ctx.clearRect(0,0,380,380);specialEnd();
+    }
+
+    // 3. KEMURKAAN DEWA NAGA & SAYAP NAGA (ULTRA RARE)
+    async function playDragonRushAnimation(startPos, endPos) {
+      const canvas = document.getElementById('fx-canvas');
+      const ctx = canvas.getContext('2d');
+      let p1 = getCellCenter(startPos);
+      let p2 = getCellCenter(endPos);
+      triggerBoardShake('heavy');
+
+      let trail = [];
+
+      for (let frame = 0; frame < 28; frame++) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let progress = frame / 28;
+        
+        let controlX = (p1.x + p2.x) / 2 + Math.sin(progress * Math.PI) * 40;
+        let controlY = (p1.y + p2.y) / 2 - Math.sin(progress * Math.PI) * 50;
+
+        let curX = Math.pow(1 - progress, 2) * p1.x + 2 * (1 - progress) * progress * controlX + Math.pow(progress, 2) * p2.x;
+        let curY = Math.pow(1 - progress, 2) * p1.y + 2 * (1 - progress) * progress * controlY + Math.pow(progress, 2) * p2.y;
+
+        trail.push({ x: curX, y: curY, alpha: 1 });
+        if (trail.length > 8) trail.shift();
+
+        trail.forEach((t, idx) => {
+          t.alpha -= 0.1;
+          ctx.save();
+          ctx.fillStyle = `rgba(255, 109, 0, ${Math.max(0, t.alpha)})`;
+          ctx.shadowColor = "#ffea00";
+          ctx.shadowBlur = 18;
+          ctx.beginPath();
+          ctx.arc(t.x, t.y, (idx + 1) * 1.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+
+        ctx.save();
+        ctx.fillStyle = "#ffea00";
+        ctx.shadowColor = "#ff3d00";
+        ctx.shadowBlur = 25;
+        ctx.beginPath();
+        ctx.arc(curX, curY, 12, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        await sleep(20);
+      }
+
+      drawImpactCracks(ctx, p2.x, p2.y, 40);
+      await sleep(150);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    // 4. PENGHENTI WAKTU (ULTRA RARE)
+    async function playTimeStopAnimation(posNum) {
+      const c=document.getElementById('fx-canvas'),ctx=c.getContext('2d'),P=getCellCenter(posNum);
+      specialStart("⏳ PENGHENTI WAKTU ⏳");
+      for(let f=0;f<58;f++){ctx.clearRect(0,0,380,380);let q=f/57;
+        for(let r=0;r<4;r++){ctx.strokeStyle=r%2?'#00e5ff':'#fff176';ctx.lineWidth=3+r;ctx.shadowColor=ctx.strokeStyle;ctx.shadowBlur=20;ctx.beginPath();ctx.arc(P.x,P.y,18+q*(55+r*38),f*.18+r,f*.18+r+Math.PI*1.6);ctx.stroke()}
+        ctx.fillStyle='rgba(0,229,255,.12)';ctx.fillRect(0,0,380,380);
+        ctx.fillStyle='#fff';ctx.shadowColor='#00e5ff';ctx.shadowBlur=35;ctx.font='900 72px sans-serif';ctx.textAlign='center';ctx.fillText('⏳',P.x,P.y+25);
+        await sleep(18)}
+      ctx.clearRect(0,0,380,380);specialEnd();
+    }
+
+    // 5. KUTUKAN ABADI & PEMBEKU JIWA (ULTRA RARE & MASTER)
+    async function playFreezeAnimation(targetPosNum) {
+      const c=document.getElementById('fx-canvas'),ctx=c.getContext('2d'),P=getCellCenter(targetPosNum);
+      specialStart("🧊 KUTUKAN ABADI 🧊");
+      for(let f=0;f<48;f++){ctx.clearRect(0,0,380,380);let q=f/47,r=8+q*65;
+        ctx.fillStyle=`rgba(0,229,255,${.15+.35*q})`;ctx.strokeStyle='#b2ebf2';ctx.lineWidth=3;ctx.shadowColor='#00e5ff';ctx.shadowBlur=25;ctx.beginPath();ctx.arc(P.x,P.y,r,0,Math.PI*2);ctx.fill();ctx.stroke();
+        for(let a=0;a<12;a++){let ang=a*Math.PI/6+f*.05;ctx.beginPath();ctx.moveTo(P.x,P.y);ctx.lineTo(P.x+Math.cos(ang)*r*1.35,P.y+Math.sin(ang)*r*1.35);ctx.stroke()}
+        await sleep(18)}
+      ctx.clearRect(0,0,380,380);specialEnd();
+    }
+
+    // 6. PENGHISAP JIWA & TUKAR TEMPAT (ULTRA RARE & MASTER)
+    // Animasi lama untuk Penghisap Jiwa: energi bergerak dari satu petak ke petak lain.
+    async function playSwapAnimation(p1Pos, p2Pos) {
+      const canvas = document.getElementById('fx-canvas');
+      const ctx = canvas.getContext('2d');
+      let c1 = getCellCenter(p1Pos);
+      let c2 = getCellCenter(p2Pos);
+      triggerBoardShake('light');
+
+      for (let frame = 0; frame < 30; frame++) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let progress = frame / 30;
+        let curX1 = (1 - progress) * c1.x + progress * c2.x;
+        let curY1 = (1 - progress) * c1.y + progress * c2.y;
+
+        ctx.save();
+        ctx.fillStyle = "#aa00ff";
+        ctx.shadowColor = "#ea80fc";
+        ctx.shadowBlur = 22;
+        ctx.beginPath();
+        ctx.arc(curX1, curY1, 10, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = "#ff0055";
+        ctx.shadowColor = "#ff80ab";
+        ctx.beginPath();
+        ctx.arc((1 - progress) * c2.x + progress * c1.x, (1 - progress) * c2.y + progress * c1.y, 10, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        await sleep(20);
+      }
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    // TUKAR TEMPAT TARGET: dua portal terbuka, kedua pemain tersedot,
+    // posisi ditukar, lalu kedua pemain keluar dari portal di petak baru.
+    async function playPortalSwapAnimation(player1, player2) {
+      const canvas = document.getElementById('fx-canvas');
+      const ctx = canvas.getContext('2d');
+
+      const pos1 = positions[player1];
+      const pos2 = positions[player2];
+      const c1 = getCellCenter(pos1);
+      const c2 = getCellCenter(pos2);
+      const token1 = document.getElementById(`p${player1}`);
+      const token2 = document.getElementById(`p${player2}`);
+
+      function drawPortal(x, y, radius, rotation, alpha = 1) {
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.translate(x, y);
+        ctx.rotate(rotation);
+
+        const glow = ctx.createRadialGradient(0, 0, radius * 0.1, 0, 0, radius);
+        glow.addColorStop(0, '#ffffff');
+        glow.addColorStop(0.18, '#00e5ff');
+        glow.addColorStop(0.52, '#7c4dff');
+        glow.addColorStop(0.78, '#e040fb');
+        glow.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = glow;
+        ctx.shadowColor = '#00e5ff';
+        ctx.shadowBlur = 25;
+        ctx.beginPath();
+        ctx.arc(0, 0, radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = '#e040fb';
+        ctx.lineWidth = 4;
+        ctx.shadowColor = '#e040fb';
+        ctx.shadowBlur = 20;
+        ctx.beginPath();
+        ctx.arc(0, 0, radius * 0.72, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.strokeStyle = '#00e5ff';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(0, 0, radius * 0.48, 0, Math.PI * 2);
+        ctx.stroke();
+
+        for (let i = 0; i < 10; i++) {
+          const angle = (Math.PI * 2 / 10) * i;
+          ctx.strokeStyle = i % 2 === 0 ? '#ffffff' : '#7c4dff';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(Math.cos(angle) * radius * 0.40, Math.sin(angle) * radius * 0.40);
+          ctx.lineTo(Math.cos(angle + 0.8) * radius * 0.78, Math.sin(angle + 0.8) * radius * 0.78);
+          ctx.stroke();
+        }
+
+        const core = ctx.createRadialGradient(0, 0, 1, 0, 0, radius * 0.45);
+        core.addColorStop(0, '#000000');
+        core.addColorStop(0.7, '#12001f');
+        core.addColorStop(1, 'rgba(124,77,255,0)');
+        ctx.fillStyle = core;
+        ctx.beginPath();
+        ctx.arc(0, 0, radius * 0.45, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      triggerBoardShake('heavy');
+
+      // Fase 1: kedua gerbang portal membuka.
+      for (let frame = 0; frame <= 25; frame++) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const progress = frame / 25;
+        const radius = 5 + progress * 38;
+        drawPortal(c1.x, c1.y, radius, frame * 0.35, progress);
+        drawPortal(c2.x, c2.y, radius, -frame * 0.35, progress);
+        await sleep(20);
+      }
+
+      await sleep(120);
+
+      // Fase 2: kedua pemain tersedot ke portal.
+      for (let frame = 0; frame <= 22; frame++) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const progress = frame / 22;
+        const radius = 43 + Math.sin(progress * Math.PI) * 8;
+        drawPortal(c1.x, c1.y, radius, frame * 0.5, 1);
+        drawPortal(c2.x, c2.y, radius, -frame * 0.5, 1);
+
+        const scale = Math.max(0.05, 1 - progress);
+        const rotation = frame * 22;
+        token1.style.transform = `scale(${scale}) rotate(${rotation}deg)`;
+        token2.style.transform = `scale(${scale}) rotate(${-rotation}deg)`;
+        token1.style.opacity = `${1 - progress}`;
+        token2.style.opacity = `${1 - progress}`;
+        await sleep(20);
+      }
+
+      token1.style.opacity = '0';
+      token2.style.opacity = '0';
+      await sleep(100);
+
+      // Fase 3: tukar posisi secara logika.
+      positions[player1] = pos2;
+      positions[player2] = pos1;
+      updatePlayerVisuals();
+      token1.style.transform = 'scale(0) rotate(0deg)';
+      token2.style.transform = 'scale(0) rotate(0deg)';
+
+      triggerBoardShake('heavy');
+
+      // Fase 4: kedua pemain keluar dari portal di tempat baru.
+      for (let frame = 0; frame <= 25; frame++) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const progress = frame / 25;
+        const radius = 45 - progress * 20;
+        drawPortal(c1.x, c1.y, radius, frame * 0.45, 1 - progress * 0.4);
+        drawPortal(c2.x, c2.y, radius, -frame * 0.45, 1 - progress * 0.4);
+
+        const scale = Math.min(1, progress * 1.35);
+        token1.style.opacity = `${Math.min(1, progress * 1.5)}`;
+        token2.style.opacity = `${Math.min(1, progress * 1.5)}`;
+        token1.style.transform = `scale(${scale}) rotate(${(1 - progress) * 360}deg)`;
+        token2.style.transform = `scale(${scale}) rotate(${-((1 - progress) * 360)}deg)`;
+        await sleep(20);
+      }
+
+      token1.style.opacity = '1';
+      token2.style.opacity = '1';
+      token1.style.transform = 'none';
+      token2.style.transform = 'none';
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      triggerBoardShake('light');
+    }
+
+    async function playSoulStealAnimation(startPos, endPos) {
+      const c=document.getElementById('fx-canvas'),ctx=c.getContext('2d'),A=getCellCenter(startPos),B=getCellCenter(endPos);
+      specialStart("💀 PENGHISAP JIWA 💀");
+      let souls=cinematicParticles(ctx,90,B.x,B.y,['#e040fb','#fff','#7c4dff','#00e5ff'],80);
+      for(let f=0;f<54;f++){ctx.clearRect(0,0,380,380);let q=f/53;
+        souls.forEach(s=>{s.x+=(A.x-s.x)*.08;s.y+=(A.y-s.y)*.08;ctx.fillStyle=s.color;ctx.shadowColor=s.color;ctx.shadowBlur=18;ctx.beginPath();ctx.arc(s.x,s.y,3+Math.sin(f*.2)*2,0,Math.PI*2);ctx.fill()});
+        ctx.strokeStyle='#e040fb';ctx.lineWidth=4;ctx.shadowColor='#fff';ctx.shadowBlur=20;ctx.beginPath();ctx.moveTo(B.x,B.y);ctx.quadraticCurveTo(190,40+Math.sin(f*.2)*55,A.x,A.y);ctx.stroke();await sleep(17)}
+      ctx.clearRect(0,0,380,380);specialEnd();
+    }
+
+    // --- ANIMASI EFEK LAINNYA ---
+    async function playDragonWingsAnimation(startPos, endPos) { await playDragonRushAnimation(startPos, endPos); }
+    async function playWindWingsAnimation(startPos, endPos) { await playDragonRushAnimation(startPos, endPos); }
+    async function playGoldenShoesAnimation(startPos, endPos) { await playDragonRushAnimation(startPos, endPos); }
+
+    async function playSpeedPotionAnimation(posNum) {
+      const canvas = document.getElementById('fx-canvas');
+      const ctx = canvas.getContext('2d');
+      const coords = getCellCenter(posNum);
+      for (let i = 0; i < 15; i++) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.save();
+        ctx.strokeStyle = "#ffeb3b";
+        ctx.lineWidth = 4.5;
+        ctx.shadowColor = "#ffff8d";
+        ctx.shadowBlur = 18;
+        ctx.beginPath();
+        ctx.arc(coords.x, coords.y, i * 4.5, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+        await sleep(20);
+      }
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    // ANIMASI PORTAL NERAKA (MEMBUKA, MENYEDOT, & MEMUNTAHKAN)
+    async function playPortalAnimation(p, targetTile = 1) {
+      const canvas=document.getElementById('fx-canvas'), ctx=canvas.getContext('2d');
+      const token=document.getElementById(`p${p}`), start=getCellCenter(positions[p]), dest=getCellCenter(targetTile);
+      triggerBoardShake('cosmic');
+      function drawHellGate(c, open, rot){
+        const w=72, h=105, half=open*w/2; ctx.save(); ctx.translate(c.x,c.y+8);
+        ctx.shadowColor='#ff2600'; ctx.shadowBlur=30;
+        // lava glow behind gate
+        const g=ctx.createRadialGradient(0,0,4,0,0,50); g.addColorStop(0,'#fff06a'); g.addColorStop(.25,'#ff4b00'); g.addColorStop(.7,'#650000'); g.addColorStop(1,'rgba(0,0,0,0)'); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(0,0,52,0,Math.PI*2); ctx.fill();
+        ctx.fillStyle='#090305'; ctx.strokeStyle='#b52a00'; ctx.lineWidth=4; ctx.shadowColor='#ff4b00';
+        // left and right iron doors opening outward
+        ctx.save(); ctx.translate(-half/2,0); ctx.rotate(-open*.9+rot*.02); ctx.fillRect(-w/2,-h/2,w/2,h); ctx.strokeRect(-w/2,-h/2,w/2,h); ctx.restore();
+        ctx.save(); ctx.translate(half/2,0); ctx.rotate(open*.9-rot*.02); ctx.fillRect(0,-h/2,w/2,h); ctx.strokeRect(0,-w/2,w/2,h); ctx.restore();
+        // spikes / gate bars
+        ctx.strokeStyle='#ff6a00'; ctx.lineWidth=2; for(let i=-20;i<=20;i+=10){ctx.beginPath();ctx.moveTo(i,-42);ctx.lineTo(i,42);ctx.stroke();}
+        ctx.restore();
+      }
+      // Gate rises and opens
+      for(let f=0;f<=34;f++){ ctx.clearRect(0,0,380,380); let t=f/34; drawHellGate(start,t,f); ctx.save(); ctx.fillStyle=`rgba(100,0,0,${t*.45})`;ctx.fillRect(0,0,380,380);ctx.restore(); await sleep(18); }
+      // Target/player is pulled into hell
+      for(let f=0;f<=24;f++){ctx.clearRect(0,0,380,380);let t=f/24;drawHellGate(start,1,f);let sc=Math.max(.03,1-t*.97);token.style.transform=`scale(${sc}) translateY(${t*8}px) rotate(${t*720}deg)`;token.style.opacity=String(1-t);triggerBoardShake('light');await sleep(18);}
+      token.style.opacity='0'; positions[p]=targetTile; updatePlayerVisuals(); token.style.transform='scale(0)'; await sleep(120);
+      // Destination gate opens and throws player back out
+      for(let f=0;f<=28;f++){ctx.clearRect(0,0,380,380);let t=f/28;drawHellGate(dest,1-t*.65,-f);let sc=Math.min(1,t*1.45);token.style.opacity=String(Math.min(1,t*1.8));token.style.transform=`scale(${sc}) translateY(${(1-t)*10}px) rotate(${(1-t)*-540}deg)`;await sleep(18);}
+      token.style.opacity='1';token.style.transform='none';drawImpactCracks(ctx,dest.x,dest.y,45);await sleep(180);ctx.clearRect(0,0,380,380);
+    }
+
+    async function playLightningAnimation(targetPosNum) {
+      const canvas = document.getElementById('fx-canvas');
+      const ctx = canvas.getContext('2d');
+      const target = getCellCenter(targetPosNum);
+      triggerBoardShake('light');
+
+      for (let frame = 0; frame < 20; frame++) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let alpha = 1 - (frame / 20);
+
+        ctx.save();
+        ctx.strokeStyle = `rgba(0, 229, 255, ${alpha})`;
+        ctx.lineWidth = 5;
+        ctx.shadowColor = "#00e5ff";
+        ctx.shadowBlur = 15;
+        ctx.beginPath();
+        ctx.moveTo(target.x + (Math.random() * 20 - 10), 0);
+        ctx.lineTo(target.x, target.y);
+        ctx.stroke();
+        ctx.restore();
+
+        drawImpactCracks(ctx, target.x, target.y, 42);
+        await sleep(25);
+      }
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    async function playMeteorAnimation(targetPosNum) {
+      const canvas = document.getElementById('fx-canvas');
+      const ctx = canvas.getContext('2d');
+      const target = getCellCenter(targetPosNum);
+      triggerBoardShake('heavy');
+
+      for (let i = 0; i < 20; i++) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let prog = i / 20;
+        let curX = target.x + 130 * (1 - prog);
+        let curY = target.y - 130 * (1 - prog);
+
+        ctx.save();
+        ctx.fillStyle = "#ff4500";
+        ctx.shadowColor = "#ffea00";
+        ctx.shadowBlur = 20;
+        ctx.beginPath();
+        ctx.arc(curX, curY, 14, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        await sleep(20);
+      }
+      drawImpactCracks(ctx, target.x, target.y, 52);
+      await sleep(200);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    async function playRockAnimation(targetPosNum) {
+      const canvas = document.getElementById('fx-canvas');
+      const ctx = canvas.getContext('2d');
+      const coords = getCellCenter(targetPosNum);
+      triggerBoardShake('heavy');
+      drawImpactCracks(ctx, coords.x, coords.y, 48);
+      await sleep(250);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    async function playTornadoAnimation() {
+      const canvas = document.getElementById('fx-canvas');
+      const ctx = canvas.getContext('2d');
+      triggerBoardShake('light');
+
+      for (let angle = 0; angle < Math.PI * 6; angle += 0.45) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.save();
+        ctx.translate(190, 190);
+        ctx.rotate(angle);
+        ctx.strokeStyle = "rgba(178, 235, 242, 0.85)";
+        ctx.lineWidth = 6;
+        ctx.shadowColor = "#00e5ff";
+        ctx.shadowBlur = 12;
+        ctx.beginPath();
+        ctx.arc(0, 0, 110, 0, Math.PI);
+        ctx.stroke();
+        ctx.restore();
+        await sleep(20);
+      }
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    async function playShieldAnimation(playerPosNum) {
+      const canvas = document.getElementById('fx-canvas');
+      const ctx = canvas.getContext('2d');
+      const coords = getCellCenter(playerPosNum);
+
+      for (let r = 8; r <= 26; r += 3) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.save();
+        ctx.strokeStyle = "#ffd700";
+        ctx.lineWidth = 3.5;
+        ctx.shadowColor = "#ffea00";
+        ctx.shadowBlur = 15;
+        ctx.beginPath();
+        ctx.arc(coords.x, coords.y, r, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+        await sleep(25);
+      }
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    async function playPoisonAnimation(targetPosNum) {
+      const canvas = document.getElementById('fx-canvas');
+      const ctx = canvas.getContext('2d');
+      const coords = getCellCenter(targetPosNum);
+
+      for (let size = 4; size <= 30; size += 3) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.save();
+        ctx.fillStyle = "rgba(156, 39, 176, 0.8)";
+        ctx.shadowColor = "#e040fb";
+        ctx.shadowBlur = 16;
+        ctx.beginPath();
+        ctx.arc(coords.x, coords.y, size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+        await sleep(25);
+      }
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    async function playSwampAnimation(posNum) {
+      const canvas = document.getElementById('fx-canvas');
+      const ctx = canvas.getContext('2d');
+      const coords = getCellCenter(posNum);
+
+      for (let size = 4; size <= 30; size += 3) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.save();
+        ctx.fillStyle = "rgba(79, 55, 45, 0.85)";
+        ctx.shadowColor = "#3e2723";
+        ctx.shadowBlur = 12;
+        ctx.beginPath();
+        ctx.arc(coords.x, coords.y, size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+        await sleep(25);
+      }
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function updatePlayerVisuals() {
+      const offsets = [
+        { x: -9, y: -9 }, { x: 2, y: -9 }, { x: -9, y: 2 }, 
+        { x: 2, y: 2 }, { x: -4, y: -4 }, { x: -4, y: 4 }
+      ];
+      for (let p = 1; p <= playerCount; p++) {
+        const coords = getCellCenter(positions[p]);
+        const token = document.getElementById(`p${p}`);
+        token.style.left = `${coords.x + offsets[p-1].x - 10}px`;
+        token.style.top = `${coords.y + offsets[p-1].y - 10}px`;
+
+        if (frozenPlayers[p] > 0) {
+          token.classList.add('frozen-ice');
+        } else {
+          token.classList.remove('frozen-ice');
+        }
+
+        if (hasShield[p]) {
+          token.classList.add('has-shield');
+        } else {
+          token.classList.remove('has-shield');
+        }
+      }
+      renderPlayerList();
+    }
+
+    function renderPlayerList() {
+      const listContainer = document.getElementById('player-list');
+      listContainer.innerHTML = '';
+      for (let i = 1; i <= playerCount; i++) {
+        let status = "";
+        if (hasShield[i]) status += " 🛡️(Perisai)";
+        if (multiDiceNextTurn[i]) status += " 🎲(Mega ×5)";
+        if (frozenPlayers[i] > 0) status += ` ❄️(Beku ${frozenPlayers[i]} Turn)`;
+        if (doubleRoll[i] > 0) status += ` ⚡(Bonus Turn x${doubleRoll[i]})`;
+        
+        listContainer.innerHTML += `
+          <div class="player-status">
+            <span style="color:${playerColors[i]}">${playerNames[i]}${status}</span>
+            <span>Petak ${positions[i]}</span>
+          </div>
+        `;
+      }
+    }
+
+    async function triggerGachaAnimation(isUltra = false) {
+      const overlay = document.getElementById('gacha-overlay');
+      const icon = document.getElementById('gacha-icon');
+      const text = document.getElementById('gacha-text');
+      const title = document.getElementById('gacha-title-text');
+      const tierLabel = document.getElementById('gacha-tier-label');
+      const gachaBox = document.getElementById('gacha-box-container');
+
+      // Decide the reward first, then reveal it with the correct tier presentation.
+      let wonEvent;
+      let tier = 'normal';
+
+      if (isUltra) {
+        const randVal = Math.random();
+        if (randVal < 0.10) {
+          wonEvent = ultimateEventsPool[Math.floor(Math.random() * ultimateEventsPool.length)];
+          tier = 'ultimate';
+        } else {
+          wonEvent = ultraRarePool[Math.floor(Math.random() * ultraRarePool.length)];
+          tier = 'ultra';
+        }
+      } else {
+        wonEvent = masterEventsPool[Math.floor(Math.random() * masterEventsPool.length)];
+      }
+
+      overlay.classList.remove('tier-normal','tier-ultra','tier-ultimate');
+      overlay.classList.add(`tier-${tier}`);
+      overlay.classList.add('active');
+
+      if (tier === 'ultimate') {
+        title.innerText = "👑 GACHA ULTIMATE — LEGENDARY 👑";
+        tierLabel.innerText = "✦ ULTIMATE ✦";
+        gachaBox.style.background = "linear-gradient(135deg,#5b0b45 0%,#21001f 52%,#3d2500 100%)";
+        setSpecialVignette(true);
+        setTimeout(() => setSpecialVignette(false), 9000);
+        triggerBoardShake('cosmic');
+      } else if (tier === 'ultra') {
+        title.innerText = "💎 GACHA ULTRA RARE — MYTHIC 💎";
+        tierLabel.innerText = "◆ ULTRA RARE ◆";
+        gachaBox.style.background = "linear-gradient(135deg,#073e62 0%,#07172f 100%)";
+        setSpecialVignette(true);
+        setTimeout(() => setSpecialVignette(false), 6500);
+        triggerBoardShake('heavy');
+      } else {
+        title.innerText = "🎰 GACHA SIHIR REALM — NORMAL 🎰";
+        tierLabel.innerText = "• NORMAL •";
+        gachaBox.style.background = "linear-gradient(135deg,#3a1548 0%,#1e092b 100%)";
+      }
+
+      const sampleIcons = tier === 'ultimate'
+        ? ["👑","🌌","🐉","⚡","☄️","💫","🔥","🌟"]
+        : tier === 'ultra'
+          ? ["💎","🐉","⏳","🧊","💀","💥","🌠","⚡"]
+          : ["🎲","🎯","⚡","🔮","🔥","❄️","🛡️","🌀","☄️","🌪️"];
+
+      // More dramatic anticipation for higher tiers.
+      const totalSteps = tier === 'ultimate' ? 30 : tier === 'ultra' ? 25 : 20;
+      for (let i = 0; i < totalSteps; i++) {
+        icon.innerText = sampleIcons[Math.floor(Math.random() * sampleIcons.length)];
+        const phase = i / totalSteps;
+        const scaleVal = 1 + Math.sin(phase * Math.PI) * (tier === 'ultimate' ? .48 : tier === 'ultra' ? .38 : .25);
+        const rotVal = (Math.random() - 0.5) * (tier === 'ultimate' ? 32 : tier === 'ultra' ? 24 : 16);
+        icon.style.transform = `scale(${scaleVal}) rotate(${rotVal}deg)`;
+        icon.style.filter = `blur(${Math.max(0, (totalSteps - i) * (tier === 'ultimate' ? .08 : .12))}px)`;
+        await sleep((tier === 'ultimate' ? 28 : tier === 'ultra' ? 34 : 40) + i * (tier === 'ultimate' ? 4.2 : 3.2));
+      }
+
+      // Burst reveal.
+      icon.style.filter = 'blur(0)';
+      icon.innerText = wonEvent.icon || "🎯";
+      text.innerText = wonEvent.name;
+      icon.style.transform = "scale(1.55) rotate(0deg)";
+      triggerBoardShake(tier === 'ultimate' ? 'cosmic' : tier === 'ultra' ? 'heavy' : 'light');
+
+      await sleep(tier === 'ultimate' ? 240 : tier === 'ultra' ? 190 : 120);
+
+      // Confetti / sparks directly on the FX canvas so the reveal feels celebratory.
+      const canvas = document.getElementById('fx-canvas');
+      const ctx = canvas.getContext('2d');
+      const colors = tier === 'ultimate'
+        ? ['#ffe600','#ff1744','#ff80ab','#ffffff','#ff8f00']
+        : tier === 'ultra'
+          ? ['#00e5ff','#2979ff','#b2ebf2','#ffffff','#7c4dff']
+          : ['#b56cff','#8e24aa','#e1bee7','#ffffff'];
+
+      const particles = Array.from({length: tier === 'ultimate' ? 85 : tier === 'ultra' ? 60 : 35}, () => ({
+        x: 190, y: 190,
+        vx: (Math.random()-.5) * (tier === 'ultimate' ? 13 : 10),
+        vy: (Math.random()-.5) * (tier === 'ultimate' ? 13 : 10),
+        g: .22 + Math.random()*.12,
+        r: 1.5 + Math.random()*3.5,
+        life: 1,
+        color: colors[Math.floor(Math.random()*colors.length)]
+      }));
+
+      for (let f=0; f<32; f++) {
+        ctx.clearRect(0,0,380,380);
+        for (const p of particles) {
+          p.x += p.vx; p.y += p.vy; p.vy += p.g; p.life -= .032;
+          ctx.globalAlpha = Math.max(0,p.life);
+          ctx.fillStyle = p.color;
+          ctx.shadowColor = p.color; ctx.shadowBlur = tier === 'ultimate' ? 18 : 11;
+          ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+        if (tier === 'ultimate') {
+          ctx.strokeStyle = `rgba(255,230,0,${1-f/34})`;
+          ctx.lineWidth = 5; ctx.shadowColor = '#ff1744'; ctx.shadowBlur = 30;
+          ctx.beginPath(); ctx.arc(190,190,35+f*8,0,Math.PI*2); ctx.stroke();
+        } else if (tier === 'ultra') {
+          ctx.strokeStyle = `rgba(0,229,255,${1-f/34})`;
+          ctx.lineWidth = 4; ctx.shadowColor = '#2979ff'; ctx.shadowBlur = 24;
+          ctx.beginPath(); ctx.arc(190,190,30+f*7,0,Math.PI*2); ctx.stroke();
+        }
+        await sleep(16);
+      }
+      ctx.clearRect(0,0,380,380);
+
+      await sleep(tier === 'ultimate' ? 1500 : tier === 'ultra' ? 1250 : 1050);
+      overlay.classList.remove('active','tier-normal','tier-ultra','tier-ultimate');
+      icon.style.transform = "scale(1) rotate(0deg)";
+      icon.style.filter = "blur(0)";
+      return wonEvent;
+    }
+
+    async function animateDiceRoll(multiplier = 1) {
+      const diceEl = document.getElementById('dice-display');
+      diceEl.classList.add('dice-rolling');
+      const diceIcons = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+      
+      for (let i = 0; i < 12; i++) {
+        let randIndex = Math.floor(Math.random() * 6);
+        diceEl.innerText = multiplier > 1 ? `×${multiplier}` : diceIcons[randIndex];
+        await sleep(75);
+      }
+      
+      let finalTotal = 0;
+      let displayString = "";
+      if (multiplier > 1) {
+        for(let m = 0; m < multiplier; m++) {
+          finalTotal += Math.floor(Math.random() * 6) + 1;
+        }
+        displayString = `${finalTotal}`;
+      } else {
+        finalTotal = Math.floor(Math.random() * 6) + 1;
+        displayString = `${finalTotal}`;
+      }
+
+      diceEl.classList.remove('dice-rolling');
+      diceEl.innerText = displayString;
+      return finalTotal;
+    }
+
+    async function rollDice() {
+      if (isMoving) return;
+      isMoving = true;
+      document.getElementById('roll-btn').disabled = true;
+
+      if (frozenPlayers[currentPlayer] > 0) {
+        frozenPlayers[currentPlayer]--;
+        updatePlayerVisuals();
+        let sisa = frozenPlayers[currentPlayer];
+        document.getElementById('log-text').innerText = `${playerNames[currentPlayer]} masih terbebas dari es! Sisa beku: ${sisa} turn. Giliran dilewati.`;
+        switchTurn();
+        isMoving = false;
+        document.getElementById('roll-btn').disabled = false;
+        return;
+      }
+
+      let activeMultiplier = 1;
+      if (multiDiceNextTurn[currentPlayer]) {
+        activeMultiplier = 5;
+        multiDiceNextTurn[currentPlayer] = false;
+      }
+
+      const dice = await animateDiceRoll(activeMultiplier);
+      lastDiceRoll = dice;
+
+      let p = currentPlayer;
+      let currentPos = positions[p];
+      let movingForward = true;
+
+      for (let i = 1; i <= dice; i++) {
+        if (movingForward) {
+          currentPos++;
+          if (currentPos === 100) {
+            movingForward = false;
+          }
+        } else {
+          currentPos--;
+        }
+
+        positions[p] = currentPos;
+        updatePlayerVisuals();
+        await sleep(150);
+      }
+
+      let logMsg = `${playerNames[p]} melangkah total ${dice} petak ke posisi ${currentPos}.`;
+
+      if (currentPos === 100) {
+        triggerWinSequence(p);
+        return;
+      }
+
+      if (goodDragons[currentPos]) {
+        logMsg += ` Memanjat Tangga Kayu 🪜 naik ke petak ${goodDragons[currentPos]}! ✨`;
+        document.getElementById('log-text').innerText = logMsg;
+        positions[p] = goodDragons[currentPos];
+        updatePlayerVisuals();
+        await sleep(400);
+      } 
+      else if (evilDragons[currentPos]) {
+        logMsg += ` Terpeleset Ular Kartun 🐍! Terlempar turun ke ${evilDragons[currentPos]}. 🔥`;
+        document.getElementById('log-text').innerText = logMsg;
+        positions[p] = evilDragons[currentPos];
+        updatePlayerVisuals();
+        await sleep(400);
+      } 
+      else if (specialUltraTiles[currentPos] || specialEventTiles[currentPos]) {
+        let isUltra = specialUltraTiles[currentPos] === true;
+        document.getElementById('log-text').innerText = `${playerNames[p]} memicu ${isUltra ? 'GACHA SPESIAL! 🌟' : 'Gacha Biasa! 🎰'}`;
+        
+        const wonEvent = await triggerGachaAnimation(isUltra);
+
+        logMsg += ` GACHA GOT: [${wonEvent.name}] - ${wonEvent.desc}`;
+        document.getElementById('log-text').innerText = logMsg;
+
+        await handleEventLogic(wonEvent, p);
+        updatePlayerVisuals();
+        await sleep(400);
+
+        if (positions[p] === 100) {
+          triggerWinSequence(p);
+          return;
+        }
+      } else {
+        document.getElementById('log-text').innerText = logMsg;
+      }
+
+      switchTurn();
+      isMoving = false;
+      document.getElementById('roll-btn').disabled = false;
+    }
+
+    function triggerWinSequence(p) {
+      document.getElementById('log-text').innerText = `🏆 ${playerNames[p]} MENANG! 🏆`;
+      document.getElementById('win-text').innerText = `🎉 ${playerNames[p]} MENANG & Menguasai Realm! 🎉`;
+      document.getElementById('win-text').style.color = playerColors[p];
+      document.getElementById('win-overlay').style.display = 'flex';
+    }
+
+    function selectEnemyTarget(attackerId) {
+      return new Promise((resolve) => {
+        const overlay = document.getElementById('target-overlay');
+        const container = document.getElementById('target-buttons-container');
+        container.innerHTML = '';
+
+        for (let i = 1; i <= playerCount; i++) {
+          if (i !== attackerId) {
+            let btn = document.createElement('button');
+            btn.className = 'target-btn';
+            let shieldTag = hasShield[i] ? " 🛡️[PERISAI EMAS AKTIF]" : "";
+            btn.innerHTML = `🎯 Serang ${playerNames[i]} (Petak ${positions[i]})${shieldTag}`;
+            btn.onclick = () => {
+              overlay.style.display = 'none';
+              resolve(i);
+            };
+            container.appendChild(btn);
+          }
+        }
+        overlay.style.display = 'flex';
+      });
+    }
+
+
+
+    // =====================================================================
+    // CINEMATIC EVENT VISUAL PACK - realistic, event-specific effects
+    // =====================================================================
+    function fx(){ const c=document.getElementById('fx-canvas'); return [c,c.getContext('2d')]; }
+    function lerp(a,b,t){ return a+(b-a)*t; }
+    function fxParticle(ctx,x,y,r,fill,alpha=1){ ctx.save();ctx.globalAlpha=alpha;ctx.fillStyle=fill;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.restore(); }
+
+    async function playWindWingsAnimation(a,b){
+      const [c,ctx]=fx(), A=getCellCenter(a), B=getCellCenter(b); const dx=B.x-A.x,dy=B.y-A.y;
+      for(let f=0;f<42;f++){ctx.clearRect(0,0,c.width,c.height);let t=f/41,x=lerp(A.x,B.x,t),y=lerp(A.y,B.y,t);ctx.save();ctx.strokeStyle='rgba(220,250,255,.8)';ctx.lineWidth=2;ctx.shadowColor='#7fe7ff';ctx.shadowBlur=12;for(let k=0;k<8;k++){let q=(f*5+k*37)%90;ctx.beginPath();ctx.moveTo(x-q*.9,y+(k-4)*3);ctx.quadraticCurveTo(x-q*.45,y+(k-4)*7-12,x,y);ctx.stroke();}ctx.restore();await sleep(16);}ctx.clearRect(0,0,c.width,c.height);
+    }
+    async function playGoldenShoesAnimation(a,b){
+      const [c,ctx]=fx(), A=getCellCenter(a), B=getCellCenter(b); triggerBoardShake('light');
+      for(let f=0;f<34;f++){ctx.clearRect(0,0,c.width,c.height);let t=f/33,x=lerp(A.x,B.x,t),y=lerp(A.y,B.y,t);ctx.save();ctx.strokeStyle='rgba(255,210,70,.95)';ctx.lineWidth=4;ctx.shadowColor='#ffb300';ctx.shadowBlur=20;ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.lineTo(x,y);ctx.stroke();for(let k=0;k<5;k++)fxParticle(ctx,x-12-k*8,y+8+(k%2)*4,3-k*.35,'#ffd54f',1-k*.12);ctx.restore();await sleep(15);}ctx.clearRect(0,0,c.width,c.height);
+    }
+    async function playDragonWingsAnimation(a,b){
+      const [c,ctx]=fx(), A=getCellCenter(a),B=getCellCenter(b);
+      for(let f=0;f<45;f++){ctx.clearRect(0,0,c.width,c.height);let t=f/44,x=lerp(A.x,B.x,t),y=lerp(A.y,B.y,t)-Math.sin(t*Math.PI)*45;ctx.save();ctx.translate(x,y);ctx.shadowColor='#ff5a1f';ctx.shadowBlur=18;ctx.fillStyle='rgba(255,120,40,.78)';let flap=Math.sin(f*.55)*10;ctx.beginPath();ctx.moveTo(0,0);ctx.quadraticCurveTo(-35,-22-flap,-48,flap);ctx.quadraticCurveTo(-18,-3,0,0);ctx.fill();ctx.beginPath();ctx.moveTo(0,0);ctx.quadraticCurveTo(35,-22+flap,48,-flap);ctx.quadraticCurveTo(18,-3,0,0);ctx.fill();ctx.restore();await sleep(16);}ctx.clearRect(0,0,c.width,c.height);
+    }
+    async function playSpeedPotionAnimation(pos){
+      const [c,ctx]=fx(),P=getCellCenter(pos);for(let f=0;f<32;f++){ctx.clearRect(0,0,c.width,c.height);let r=10+f*1.7;ctx.save();ctx.translate(P.x,P.y);ctx.strokeStyle='rgba(110,255,190,.9)';ctx.lineWidth=3;ctx.shadowColor='#00e676';ctx.shadowBlur=16;ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.stroke();for(let i=0;i<12;i++){let a=f*.22+i*Math.PI/6;fxParticle(ctx,Math.cos(a)*r,Math.sin(a)*r,2,'#b9ffcf');}ctx.restore();await sleep(18);}ctx.clearRect(0,0,c.width,c.height);
+    }
+    async function playMegaDiceAnimation(pos){const [c,ctx]=fx(),P=getCellCenter(pos);for(let f=0;f<38;f++){ctx.clearRect(0,0,c.width,c.height);ctx.save();ctx.translate(P.x,P.y);ctx.rotate(f*.22);ctx.fillStyle='rgba(255,255,255,.95)';ctx.shadowColor='#ffd700';ctx.shadowBlur=25;ctx.fillRect(-18,-18,36,36);ctx.fillStyle='#7b1fa2';for(let i=0;i<5;i++){let a=i*Math.PI*2/5;fxParticle(ctx,Math.cos(a)*8,Math.sin(a)*8,2,'#7b1fa2');}ctx.restore();await sleep(18);}ctx.clearRect(0,0,c.width,c.height);}
+    async function playSwampAnimation(pos){const [c,ctx]=fx(),P=getCellCenter(pos);for(let f=0;f<34;f++){ctx.clearRect(0,0,c.width,c.height);let r=8+f*.9;ctx.save();let g=ctx.createRadialGradient(P.x,P.y,2,P.x,P.y,r);g.addColorStop(0,'#0b1209');g.addColorStop(.65,'rgba(72,85,38,.9)');g.addColorStop(1,'rgba(30,35,20,0)');ctx.fillStyle=g;ctx.beginPath();ctx.ellipse(P.x,P.y,r,r*.42,0,0,Math.PI*2);ctx.fill();for(let i=0;i<5;i++)fxParticle(ctx,P.x+(Math.random()-.5)*r,P.y+(Math.random()-.5)*r*.4,2,'#8a9a5b');ctx.restore();await sleep(18);}ctx.clearRect(0,0,c.width,c.height);}
+    async function playLightningAnimation(pos){const [c,ctx]=fx(),P=getCellCenter(pos);triggerBoardShake('heavy');for(let f=0;f<9;f++){ctx.clearRect(0,0,c.width,c.height);ctx.save();ctx.strokeStyle='#e9fbff';ctx.lineWidth=3;ctx.shadowColor='#5ce1ff';ctx.shadowBlur=24;ctx.beginPath();let x=P.x+(Math.random()-.5)*40;ctx.moveTo(x,0);for(let y=0;y<P.y;y+=15){x+=Math.random()*22-11;ctx.lineTo(x,y);}ctx.lineTo(P.x,P.y);ctx.stroke();ctx.restore();await sleep(45);}drawImpactCracks(ctx,P.x,P.y,45);await sleep(140);ctx.clearRect(0,0,c.width,c.height);}
+    async function playMeteorAnimation(pos){const [c,ctx]=fx(),P=getCellCenter(pos);triggerBoardShake('heavy');for(let f=0;f<36;f++){ctx.clearRect(0,0,c.width,c.height);let t=f/35,x=lerp(P.x+190,P.x,t),y=lerp(P.y-180,P.y,t);ctx.save();let g=ctx.createLinearGradient(x+60,y-60,x,y);g.addColorStop(0,'rgba(255,80,0,0)');g.addColorStop(1,'#ffef9b');ctx.strokeStyle=g;ctx.lineWidth=10;ctx.shadowColor='#ff6d00';ctx.shadowBlur=25;ctx.beginPath();ctx.moveTo(x+70,y-70);ctx.lineTo(x,y);ctx.stroke();fxParticle(ctx,x,y,10,'#ff8a50');ctx.restore();await sleep(16);}drawImpactCracks(ctx,P.x,P.y,58);await sleep(180);ctx.clearRect(0,0,c.width,c.height);}
+    async function playRockAnimation(pos){const [c,ctx]=fx(),P=getCellCenter(pos);triggerBoardShake('heavy');for(let f=0;f<24;f++){ctx.clearRect(0,0,c.width,c.height);let t=f/23,x=P.x+35*(1-t),y=P.y-130*(1-t);ctx.save();ctx.fillStyle='#777';ctx.shadowColor='#222';ctx.shadowBlur=12;ctx.beginPath();ctx.arc(x,y,12+t*4,0,Math.PI*2);ctx.fill();ctx.restore();await sleep(18);}drawImpactCracks(ctx,P.x,P.y,52);for(let i=0;i<16;i++)fxParticle(ctx,P.x+(Math.random()-.5)*70,P.y+(Math.random()-.5)*50,Math.random()*3+1,'#b0a89a');await sleep(170);ctx.clearRect(0,0,c.width,c.height);}
+    async function playPoisonAnimation(pos){const [c,ctx]=fx(),P=getCellCenter(pos);for(let f=0;f<36;f++){ctx.clearRect(0,0,c.width,c.height);ctx.save();for(let i=0;i<14;i++){let a=f*.12+i*.8,r=8+(i*2+f%8);fxParticle(ctx,P.x+Math.cos(a)*r,P.y-Math.abs(Math.sin(a))*r,Math.max(1,4-i*.16),'#9c27b0',.75);}ctx.restore();await sleep(18);}ctx.clearRect(0,0,c.width,c.height);}
+    async function playFreezeAnimation(pos){const [c,ctx]=fx(),P=getCellCenter(pos);for(let f=0;f<34;f++){ctx.clearRect(0,0,c.width,c.height);let r=5+f;ctx.save();ctx.strokeStyle='rgba(170,245,255,.9)';ctx.lineWidth=2;ctx.shadowColor='#4dd0e1';ctx.shadowBlur=18;ctx.beginPath();for(let i=0;i<6;i++){let a=i*Math.PI/3;ctx.moveTo(P.x,P.y);ctx.lineTo(P.x+Math.cos(a)*r,P.y+Math.sin(a)*r);}ctx.stroke();ctx.restore();await sleep(18);}ctx.clearRect(0,0,c.width,c.height);}
+    async function playShieldAnimation(pos){const [c,ctx]=fx(),P=getCellCenter(pos);for(let f=0;f<34;f++){ctx.clearRect(0,0,c.width,c.height);let r=8+f*.8;ctx.save();ctx.strokeStyle='rgba(255,215,70,.95)';ctx.lineWidth=3;ctx.shadowColor='#ffb300';ctx.shadowBlur=22;ctx.beginPath();ctx.arc(P.x,P.y,r,0,Math.PI*2);ctx.stroke();ctx.restore();await sleep(18);}ctx.clearRect(0,0,c.width,c.height);}
+    async function playTornadoAnimation(){const [c,ctx]=fx();triggerBoardShake('heavy');for(let f=0;f<46;f++){ctx.clearRect(0,0,c.width,c.height);ctx.save();ctx.translate(190,190);ctx.rotate(f*.32);for(let i=0;i<6;i++){ctx.strokeStyle=`rgba(210,245,255,${.8-i*.1})`;ctx.lineWidth=2+i;ctx.beginPath();ctx.ellipse(0,20-i*18,18+i*13,7,0,0,Math.PI*2);ctx.stroke();}ctx.restore();await sleep(16);}ctx.clearRect(0,0,c.width,c.height);}
+    async function playTimeStopAnimation(pos){const [c,ctx]=fx(),P=getCellCenter(pos);for(let f=0;f<42;f++){ctx.clearRect(0,0,c.width,c.height);let r=15+f*3;ctx.save();ctx.strokeStyle='rgba(120,240,255,.9)';ctx.lineWidth=3;ctx.shadowColor='#00bcd4';ctx.shadowBlur=20;ctx.beginPath();ctx.arc(P.x,P.y,r,0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.moveTo(P.x,P.y);ctx.lineTo(P.x+Math.cos(f*.18)*18,P.y+Math.sin(f*.18)*18);ctx.stroke();ctx.restore();await sleep(16);}ctx.clearRect(0,0,c.width,c.height);}
+    async function playSoulStealAnimation(a,b){const [c,ctx]=fx(),A=getCellCenter(a),B=getCellCenter(b);for(let f=0;f<40;f++){ctx.clearRect(0,0,c.width,c.height);let t=f/39,x=lerp(B.x,A.x,t),y=lerp(B.y,A.y,t);ctx.save();ctx.strokeStyle='rgba(140,30,190,.8)';ctx.lineWidth=4;ctx.shadowColor='#b000ff';ctx.shadowBlur=25;ctx.beginPath();ctx.moveTo(B.x,B.y);ctx.quadraticCurveTo((A.x+B.x)/2,(A.y+B.y)/2-40,x,y);ctx.stroke();fxParticle(ctx,x,y,9,'#8e24aa');ctx.restore();await sleep(17);}ctx.clearRect(0,0,c.width,c.height);}
+    async function playSwapAnimation(p1,p2){const [c,ctx]=fx(),a=positions[p1],b=positions[p2],A=getCellCenter(a),B=getCellCenter(b),t1=document.getElementById(`p${p1}`),t2=document.getElementById(`p${p2}`);function portal(P,r,rot){ctx.save();ctx.translate(P.x,P.y);ctx.rotate(rot);let g=ctx.createRadialGradient(0,0,2,0,0,r);g.addColorStop(0,'#05000a');g.addColorStop(.35,'#6a1b9a');g.addColorStop(.7,'#00e5ff');g.addColorStop(1,'rgba(0,229,255,0)');ctx.fillStyle=g;ctx.shadowColor='#00e5ff';ctx.shadowBlur=22;ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.fill();ctx.restore();}for(let f=0;f<24;f++){ctx.clearRect(0,0,c.width,c.height);portal(A,5+f*1.7,f*.35);portal(B,5+f*1.7,-f*.35);await sleep(18);}for(let f=0;f<20;f++){ctx.clearRect(0,0,c.width,c.height);portal(A,45,f*.5);portal(B,45,-f*.5);let z=1-f/20;t1.style.transform=`scale(${z}) rotate(${f*25}deg)`;t2.style.transform=`scale(${z}) rotate(${-f*25}deg)`;t1.style.opacity=t2.style.opacity=z;await sleep(18);}positions[p1]=b;positions[p2]=a;updatePlayerVisuals();for(let f=0;f<24;f++){ctx.clearRect(0,0,c.width,c.height);portal(A,45-f*.8,f*.4);portal(B,45-f*.8,-f*.4);let z=Math.min(1,f/15);t1.style.opacity=t2.style.opacity=z;t1.style.transform=`scale(${z})`;t2.style.transform=`scale(${z})`;await sleep(18);}t1.style.opacity=t2.style.opacity='1';t1.style.transform=t2.style.transform='none';ctx.clearRect(0,0,c.width,c.height);}
+
+
+    async function handleEventLogic(ev, p) {
+      if (ev.type === 'cosmic_apocalypse') { await playCosmicApocalypseAnimation(); for(let i=1;i<=playerCount;i++) if(i!==p){ if(hasShield[i]) hasShield[i]=false; else {positions[i]=1;frozenPlayers[i]+=1;} } doubleRoll[p]+=2;hasShield[p]=true; }
+      else if (ev.type === 'mass_apocalypse') { await playApocalypseAnimation(); for(let i=1;i<=playerCount;i++) if(i!==p){if(hasShield[i])hasShield[i]=false;else positions[i]=1;} }
+      else if (ev.type === 'move_self') { if(ev.name==='KEMURKAAN DEWA NAGA'){ let t=await selectEnemyTarget(p); await playDragonWrathAttack(p,t); if(hasShield[t]) hasShield[t]=false; else positions[t]=Math.max(1,positions[t]-15); } else { let old=positions[p], next=Math.min(Math.max(old+ev.val,1),100); positions[p]=next; if(ev.name==='Sayap Naga')await playDragonWingsAnimation(old,next); else if(ev.name==='Sayap Angin')await playWindWingsAnimation(old,next); else if(ev.name==='Sepatu Emas')await playGoldenShoesAnimation(old,next); else if(ev.name==='Lumpur Hisap')await playSwampAnimation(old); } }
+      else if (ev.type === 'double_turn') {await playSpeedPotionAnimation(positions[p]);doubleRoll[p]+=ev.val;}
+      else if (ev.type === 'five_dice_next') {await playMegaDiceAnimation(positions[p]);multiDiceNextTurn[p]=true;}
+      else if (ev.type === 'super_double_turn') {await playTimeStopAnimation(positions[p]);doubleRoll[p]+=ev.val;}
+      else if (ev.type === 'freeze_self') {await playFreezeAnimation(positions[p]);frozenPlayers[p]+=ev.val;}
+      else if (ev.type === 'teleport_fixed') {if(ev.name==='RESTU DEWA NAGA'){await playBlessingAnimation(positions[p]);positions[p]=ev.val;}else await playPortalAnimation(p,ev.val);}
+      else if (ev.type === 'gain_shield') {if(!hasShield[p]){hasShield[p]=true;await playShieldAnimation(positions[p]);}}
+      else if (ev.type === 'mass_tornado') {await playTornadoAnimation();for(let i=1;i<=playerCount;i++)if(i!==p){if(hasShield[i])hasShield[i]=false;else positions[i]=Math.max(1,positions[i]-(Math.floor(Math.random()*46)+5));}}
+      else if (ev.type === 'target_demote') {let t=await selectEnemyTarget(p);if(ev.name==='Hantaman Meteor')await playMeteorAnimation(positions[t]);else if(ev.name==='Longsoran Batu')await playRockAnimation(positions[t]);else if(ev.name==='Petir Tunggal')await playLightningAnimation(positions[t]);else await playPoisonAnimation(positions[t]);if(hasShield[t])hasShield[t]=false;else positions[t]=Math.max(1,positions[t]+ev.val);}
+      else if (ev.type === 'target_freeze' || ev.type === 'target_super_freeze') {let t=await selectEnemyTarget(p);await playFreezeAnimation(positions[t]);if(hasShield[t])hasShield[t]=false;else frozenPlayers[t]+=ev.val;}
+      else if (ev.type === 'target_swap') {let t=await selectEnemyTarget(p);if(hasShield[t]){await playShieldAnimation(positions[t]);hasShield[t]=false;}else await playSwapAnimation(p,t);}
+      else if (ev.type === 'steal_lead') {let lead=-1,max=-1;for(let i=1;i<=playerCount;i++)if(i!==p&&positions[i]>max){max=positions[i];lead=i;}if(lead!==-1){await playSoulStealAnimation(positions[p],positions[lead]);if(hasShield[lead])hasShield[lead]=false;else {let v=positions[lead];positions[p]=v;positions[lead]=Math.max(1,v-10);}}}
+    }
+
+    function switchTurn() {
+      if (doubleRoll[currentPlayer] > 0) {
+        doubleRoll[currentPlayer]--;
+        document.getElementById('log-text').innerText += ` | ${playerNames[currentPlayer]} mendapat giliran ekstra!`;
+        return;
+      }
+      currentPlayer = (currentPlayer % playerCount) + 1;
+      const indicator = document.getElementById('turn-indicator');
+      indicator.innerText = playerNames[currentPlayer];
+      indicator.style.color = playerColors[currentPlayer];
+    }
+
+    window.onload = () => {
+      renderCharacterSelection();
+    };
+  
+    // ===== PREMIUM DRAGON MENU SKIN =====
+    document.addEventListener('DOMContentLoaded', () => {
+      const candidates = ['game-setup','setup-screen','start-screen'];
+      let menu = candidates.map(id=>document.getElementById(id)).find(Boolean);
+      if (!menu) menu = document.querySelector('.menu-screen');
+      if (menu) {
+        const title = menu.querySelector('h1,h2');
+        if (title && !menu.querySelector('.dragon-menu-title')) {
+          title.classList.add('dragon-menu-title');
+          const sub=document.createElement('div');
+          sub.className='dragon-menu-subtitle';
+          sub.textContent='ENTER THE LEGENDARY DRAGON REALM';
+          title.insertAdjacentElement('afterend',sub);
+        }
+        const panels=[...menu.children].filter(el=>el!==title && !el.classList.contains('dragon-menu-subtitle'));
+        panels.forEach(el=>{
+          if (el.matches('button,.btn')) el.classList.add('dragon-menu-btn');
+          else if (el.querySelector && el.querySelector('input,select,.character-option,.character-card')) el.classList.add('dragon-menu-panel');
+        });
+        menu.querySelectorAll('button').forEach(b=>b.classList.add('dragon-menu-btn'));
+        menu.querySelectorAll('.character-option,.character-card,[data-character]').forEach(c=>c.classList.add('dragon-character-card'));
+      }
+    });
+
+</script>
+</body>
+</html>
